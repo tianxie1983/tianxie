@@ -2,7 +2,23 @@
 
 > 场景：把本仓库推送到你自己的 GitHub，之后每天自动抓取中关村在线行情价、生成 `web/data.js` 并提交，由 Vercel / Netlify / GitHub Pages 自动重新部署。你无需任何手动操作。
 
-## 一、把代码还原成可推送的仓库
+## 快速开始（一键脚本，推荐）
+
+把 `pc-build-github.bundle` 与 `scripts/setup-github.sh` 放在同一目录，在**能联网 GitHub 的电脑**上运行：
+
+```bash
+bash setup-github.sh <你的GitHub空仓库URL>
+# 例: bash setup-github.sh https://github.com/yourname/pc-build.git
+# 可选参数: bash setup-github.sh <URL> [本地目录] [分支]
+```
+
+脚本自动完成「从 bundle 还原仓库 → 关联远程 → 推送到 main」三步。完成后直接跳到 **三、让平台自动部署**。
+
+需要手动操作或了解细节时，见下方分步说明。
+
+---
+
+## 一、把代码还原成可推送的仓库（手动）
 
 本项目的开发沙箱无法直连 GitHub，因此交付的是 `git bundle` 离线包（一个 `.bundle` 文件，内含完整 git 历史）。在**能联网 GitHub 的电脑**上执行：
 

@@ -37,7 +37,7 @@ if [ -z "$BUNDLE_PATH" ]; then
   exit 1
 fi
 
-echo "==> 1/3 从离线包还原仓库到 ./$TARGET_DIR"
+echo "==> 1/3 从离线包还原仓库到 $TARGET_DIR"
 rm -rf "$TARGET_DIR"
 git clone "$BUNDLE_PATH" "$TARGET_DIR"
 cd "$TARGET_DIR"

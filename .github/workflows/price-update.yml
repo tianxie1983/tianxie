@@ -1,0 +1,37 @@
+name: 定时更新配件价格
+
+on:
+  schedule:
+    # 每日 UTC 18:17 ≈ 北京时间次日 02:17
+    - cron: '17 18 * * *'
+  workflow_dispatch: {}      # 允许在 Actions 页面手动触发
+
+permissions:
+  contents: write            # 允许工作流提交并推送 data.js
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 抓取最新价格并生成 data.js
+        run: node scripts/price-fetch.js
+
+      - name: 提交并推送（触发 Vercel/Netlify/Pages 自动部署）
+        run: |
+          git config user.name "price-bot"
+          git config user.email "bot@workbuddy.local"
+          git add web/data.js
+          if git diff --cached --quiet; then
+            echo "价格无变化，跳过提交"
+          else
+            git commit -m "chore: 自动更新配件价格 $(date +%F)"
+            git push
+          fi

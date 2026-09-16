@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f2433" />
+  <title>装机大师 · 配件报价与智能装机</title>
+  <meta name="description" content="装机大师 - 电脑配件报价与智能装机单。88 款 CPU/显卡/主板/内存等配件参考价，自动算总价、估算功耗、校验插槽与电源兼容性。" />
+  <meta property="og:title" content="装机大师 · 配件报价与智能装机" />
+  <meta property="og:description" content="88 款 PC 配件参考价 · 自动算总价 · 功耗估算 · 兼容性校验" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="cover.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="phone">
+    <main id="view"></main>
+
+    <!-- 底部 Tab -->
+    <nav id="tabbar">
+      <div class="tab" data-action="tab:home"><span class="tab-ico">🏠</span><span class="tab-tx">首页</span></div>
+      <div class="tab" data-action="tab:build"><span class="tab-ico">🛠️</span><span class="tab-tx">装机单</span></div>
+      <div class="tab" data-action="tab:mine"><span class="tab-ico">📁</span><span class="tab-tx">我的配置</span></div>
+    </nav>
+  </div>
+
+  <!-- 选件弹层 -->
+  <div id="sheet" class="sheet-mask hidden">
+    <div class="sheet">
+      <div class="sheet-head">
+        <span id="sheet-title">选择配件</span>
+        <span class="sheet-close" data-action="sheet:close">✕</span>
+      </div>
+      <div id="sheet-list" class="sheet-list"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

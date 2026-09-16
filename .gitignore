@@ -1,0 +1,26 @@
+# ===== 微信小程序原始工程（带前导 / 限定根目录，避免误伤 web/app.js） =====
+/app.js
+/app.json
+/app.wxss
+/sitemap.json
+/project.config.json
+/pages/
+
+# 以下两个目录必须保留：
+#   data/    —— scripts/price-fetch.js 的数据源依赖
+#   utils/   —— scripts/price-fetch.js 依赖 utils/format.js
+
+# ===== 打包产物 =====
+*.zip
+
+# ===== 单文件离线版（可由 web/index.html 重新生成） =====
+web/dist/
+
+# ===== 沙箱/环境文件 =====
+.cloudstudio
+.codebuddy
+.tmp
+
+# ===== 系统 =====
+.DS_Store
+Thumbs.db

@@ -185,5 +185,29 @@ button { font-family: inherit; }
 .src-tag { display: inline-block; margin-top: 6px; padding: 1px 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; }
 .src-tag.zol { background: #e8f6ee; color: var(--ok); border: 1px solid #bfe6cd; }
 .src-tag.manual { background: #fff3e6; color: #c97a16; border: 1px solid #f3d9b3; }
+.src-tag.mine { background: #eef0ff; color: var(--primary); border: 1px solid #c5cbff; }
 .price-range { margin-top: 4px; font-size: 12px; color: var(--text-sub); }
 .price-src { margin-top: 4px; font-size: 11px; color: var(--text-sub); }
+.price-note { margin-top: 4px; font-size: 11.5px; color: var(--primary); }
+
+/* 手动维护价：可点击入口 */
+.price-edit { margin-top: 10px; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #f3f5ff; color: var(--primary); border: 1px solid #c5cbff; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; }
+.price-edit:active { background: #e6e9ff; }
+
+/* ---------- 手动维护价编辑器 ---------- */
+.editor-mask { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; z-index: 60; }
+.editor { width: 100%; max-width: 480px; background: #fff; border-radius: 18px 18px 0 0; padding: 16px 18px calc(18px + env(safe-area-inset-bottom)); animation: slideUp .22s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.editor-head { display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+.editor-close { font-size: 18px; color: #9aa0ab; padding: 4px 8px; cursor: pointer; }
+.editor-row { margin-bottom: 14px; }
+.editor-row > label { display: block; font-size: 12.5px; color: var(--text-sub); margin-bottom: 6px; }
+.editor-cur { font-size: 14px; color: var(--text); }
+.editor-cur b { color: var(--primary); }
+.editor-input { width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid var(--line); border-radius: 11px; font-size: 15px; color: var(--text); background: #fafbff; outline: none; }
+.editor-input:focus { border-color: var(--primary); background: #fff; }
+.editor-tip { font-size: 11px; color: #9aa0ab; line-height: 1.5; margin-bottom: 14px; }
+.editor-actions { display: flex; gap: 10px; }
+.editor-actions .ba { flex: 1; text-align: center; padding: 12px 0; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.editor-actions .ba.primary { background: var(--primary); color: #fff; }
+.editor-actions .ba.ghost { background: #f2f3f7; color: var(--text-sub); }

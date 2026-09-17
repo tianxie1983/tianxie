@@ -1,0 +1,31 @@
+# Gitee Go 流水线：每日自动抓价 → 提交 → 触发 Gitee Pages 重建
+# 位置：仓库根目录 .workflows/gitee-go.yml（Gitee Go 默认识别此目录）
+# 启用：Gitee 仓库 → DevOps / 流水线 → 新建流水线，选择本文件；并在
+#       「变量与密钥」中添加：GITEE_TOKEN(密钥)、GITEE_OWNER、GITEE_REPO
+#
+# 说明：
+#   - on.push：代码推送即触发（含本流水线自身的提交，但无变化时脚本会跳过，不形成死循环）
+#   - on.schedule：每日定时触发（cron 为 UTC 时间，按需调整）
+#   - 必须先手动启动一次 Gitee Pages（分支 main、目录 /web），POST /pages/builds 才会生效
+
+version: '1.0'
+name: 装机大师-自动抓价部署
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 10 * * *'
+stages:
+  - stage:
+      name: 抓价并部署
+      image: node:18
+      steps:
+        - step: shell
+          name: 运行价格脚本
+          commands:
+            - node scripts/price-fetch.js
+        - step: shell
+          name: 提交并触发 Pages 重建
+          commands:
+            - bash scripts/deploy-gitee.sh

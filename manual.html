@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>装机大师 · 操作说明书</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 540px;
+    background: #e9edf4;
+    font-family: "Noto Sans CJK SC", "Noto Serif CJK SC", "Microsoft YaHei", sans-serif;
+    color: #2a3142;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 18px 16px 22px; }
+
+  /* 顶部 Hero */
+  .hero {
+    background: linear-gradient(135deg, #1f2433 0%, #2b3550 60%, #34406b 100%);
+    border-radius: 22px;
+    padding: 26px 22px 22px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(31,36,51,.22);
+  }
+  .hero::after {
+    content: ""; position: absolute; right: -40px; top: -40px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(108,142,255,.35), transparent 70%);
+  }
+  .hero .ico { font-size: 34px; }
+  .hero h1 { font-size: 25px; margin-top: 8px; letter-spacing: 1px; }
+  .hero .sub { font-size: 13px; color: #b9c2dd; margin-top: 6px; letter-spacing: .5px; }
+  .hero .tag {
+    display: inline-block; margin-top: 14px; padding: 5px 12px;
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px; font-size: 12px; color: #dfe5f5;
+  }
+
+  /* 卡片 */
+  .card {
+    background: #fff; border-radius: 18px; padding: 16px 16px 14px;
+    margin-top: 14px; box-shadow: 0 6px 16px rgba(31,36,51,.08);
+  }
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .badge {
+    width: 26px; height: 26px; flex: 0 0 26px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 14px;
+    background: linear-gradient(135deg,#6c8eff,#8a6cff);
+  }
+  .sec-title { font-size: 16px; font-weight: 700; color: #1f2433; }
+
+  .line {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 13.5px; line-height: 1.55; color: #3a4252;
+    padding: 6px 0; border-bottom: 1px dashed #eef1f6;
+  }
+  .line:last-child { border-bottom: none; }
+  .line .e { font-size: 16px; flex: 0 0 18px; text-align: center; }
+  .line b { color: #1f2433; }
+  .hl { color: #3a5bff; font-weight: 700; }
+
+  /* 截图样张 */
+  .shot {
+    margin-top: 10px; border: 1px solid #eef1f6; border-radius: 12px;
+    background: #f7f9fc; padding: 10px;
+  }
+  .phone {
+    width: 168px; border-radius: 16px; background: #fff;
+    border: 2px solid #d8deea; margin: 0 auto; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(31,36,51,.1);
+  }
+  .ph-bar { background: #f3f5fb; padding: 7px 10px; font-size: 11px; color: #8893a8; display:flex; justify-content: space-between; }
+  .ph-body { padding: 10px; }
+  .ph-row { background: #f3f5fb; border-radius: 8px; padding: 8px 10px; font-size: 11px; color:#55607a; margin-bottom:7px; }
+  .ph-btn { background: linear-gradient(135deg,#3a5bff,#6c8eff); color:#fff; text-align:center; border-radius: 8px; padding: 8px; font-size: 11.5px; font-weight: 700; }
+  .ph-mini { background:#eef0ff; color:#3a5bff; border:1px solid #c5cbff; border-radius:999px; text-align:center; padding:6px; font-size:10.5px; font-weight:700; }
+
+  .tip {
+    background: #fff7e8; border: 1px solid #ffe2b0; border-radius: 12px;
+    padding: 11px 13px; margin-top: 14px; font-size: 12.5px; color:#946200; line-height:1.6;
+  }
+  .tip b { color:#7a4f00; }
+
+  .foot {
+    text-align: center; font-size: 11.5px; color: #9aa3b5; margin-top: 16px; line-height: 1.7;
+  }
+  .foot .url { color:#4a5570; font-weight:600; }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="ico">🛠️</div>
+    <h1>装机大师 · 操作说明书</h1>
+    <div class="sub">配件报价 · 智能装机 · 一键算价</div>
+    <div class="tag">手机浏览器直接打开 · 无需安装</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="badge">1</div><div class="sec-title">首页逛配件</div></div>
+    <div class="line"><span class="e">📂</span><div><b>配件分类</b>：点对应图标进入某类（CPU / 显卡 / 主板…），可<b>综合 / 价格↑ / 价格↓</b> 排序</div></div>
+    <div class="line"><span class="e">🎁</span><div><b>预算套餐</b>：办公入门 / 2K 游戏 / 旗舰 4K，一键套用整套配置到装机单</div></div>
+    <div class="line"><span class="e">🔥</span><div><b>热门推荐</b>：直接看爆款，点卡片进详情</div></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="badge">2</div><div class="sec-title">看配件详情</div></div>
+    <div class="line"><span class="e">💡</span><div>详情页显示<b>报价</b>、<b>规格参数</b>，以及价格来源角标</div></div>
+    <div class="line"><span class="e">➕</span><div>点 <b>「选入装机单」</b> 把这款加入你的配置</div></div>
+    <div class="shot">
+      <div class="phone">
+        <div class="ph-bar"><span>配件详情</span><span>‹</span></div>
+        <div class="ph-body">
+          <div class="ph-row">显卡 · NVIDIA<br/>RTX 4070 SUPER</div>
+          <div class="ph-row">¥ 4799 &nbsp; <span style="color:#c97a16">手动</span></div>
+          <div class="ph-mini" style="margin-bottom:7px">✎ 手动维护价 ›</div>
+          <div class="ph-btn">选入装机单</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="badge">3</div><div class="sec-title">手动维护价（可改价）</div></div>
+    <div class="line"><span class="e">✎</span><div>详情页点 <span class="hl">「✎ 手动维护价 ›」</span>，弹出编辑器</div></div>
+    <div class="line"><span class="e">💰</span><div>填<b>你看到的实际价格</b> + 备注（如：京东自营 / 9月行情）</div></div>
+    <div class="line"><span class="e">💾</span><div>点<b>保存</b>：本机所有页面按此价计算；角标变蓝色 <span class="hl">「我维护」</span></div></div>
+    <div class="line"><span class="e">↩️</span><div>想还原点 <b>「恢复参考价」</b> 即可退回官方参考价</div></div>
+    <div class="tip">📌 维护价只保存在<b>你本机浏览器</b>，不影响其他用户；价格随行情波动，以实际购买渠道为准。</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="badge">4</div><div class="sec-title">装机单 · 自动算价</div></div>
+    <div class="line"><span class="e">🧩</span><div>点每行 <b>「选择」</b> 挑配件，点 <b>「移除」</b> 去掉</div></div>
+    <div class="line"><span class="e">🧮</span><div>底部自动算：<b>合计金额</b> · <b>估算功耗</b> · <b>建议电源 ≥</b> · <b>兼容性校验</b></div></div>
+    <div class="line"><span class="e">✅</span><div>插槽 / 内存类型冲突、电源余量不足会红字提醒；点 <b>「保存配置单」</b></div></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="badge">5</div><div class="sec-title">我的配置</div></div>
+    <div class="line"><span class="e">📁</span><div>底部「我的配置」查看已存配置单</div></div>
+    <div class="line"><span class="e">✏️</span><div><b>载入编辑</b> 继续改 · <b>删除</b> 移除不再需要的单子</div></div>
+  </div>
+
+  <div class="tip" style="background:#eef3ff;border-color:#c5cbff;color:#34406b">
+    💡 <b>价格说明</b>：约 27 款为 ZOL 自动参考价（绿色「ZOL参考」角标），其余为参考报价；均随行情波动，仅供参考。
+  </div>
+
+  <div class="foot">
+    装机大师 · 简易操作说明书<br/>
+    在线使用：<span class="url">a4c91a2a2f665bc60.app.workbuddy.link</span>
+  </div>
+
+</body>
+</html>

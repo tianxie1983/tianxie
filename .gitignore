@@ -20,6 +20,7 @@ web/dist/
 .cloudstudio
 .codebuddy
 .tmp
+.publish-port
 
 # ===== 系统 =====
 .DS_Store

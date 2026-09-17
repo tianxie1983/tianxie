@@ -18,6 +18,30 @@ const PUBLISH = process.argv.includes('--publish');
 const data = require(path.join(ROOT, 'data/parts.js'));
 const util = require(path.join(ROOT, 'utils/format.js'));
 
+// 杀掉所有 python http.server 进程（按 /proc 扫描，避免 pkill 误杀自身 shell）
+// 重发前清理，防止端口堆积；新服务随后在全新端口启动
+function killHttpServers() {
+  try {
+    for (const pid of fs.readdirSync('/proc')) {
+      if (!/^[0-9]+$/.test(pid)) continue;
+      try {
+        const cmd = fs.readFileSync(`/proc/${pid}/cmdline`, 'utf8');
+        if (cmd.includes('http.server')) process.kill(parseInt(pid, 10), 'SIGTERM');
+      } catch (e) {}
+    }
+  } catch (e) {}
+}
+// 读取上次发布端口，递增出一个新端口（沙箱网关按 域名+端口 缓存 index.html，
+// 必须用不同端口强制生成新 release 才能刷新缓存，否则线上会卡在旧快照）
+function nextPublishPort() {
+  const f = path.join(ROOT, '.publish-port');
+  let port = 8079;
+  try { port = parseInt(fs.readFileSync(f, 'utf8'), 10) || 8079; } catch (e) {}
+  port = (port < 8080 || port > 8900) ? 8080 : port + 1;
+  fs.writeFileSync(f, String(port));
+  return port;
+}
+
 // 品牌/通用词（归一化时去除，避免干扰型号匹配）；保留 ryzen/core 等系列词
 const BRAND_WORDS = ['nvidia','geforce','amd','intel','msi','gigabyte','技嘉','asus','华硕','zotac','索泰','colorful','七彩虹','galax','影驰','sapphire','蓝宝石','kingston','金士顿','corsair','海盗船','western digital','wd','西部数据','samsung','三星','seagate','希捷','crucial','英睿达','lexar','雷克沙','teamgroup','芝奇','gskill','asrock','华擎','evga','thermaltake','曜越','cooler master','酷冷至尊','deepcool','九州风神','lianli','联力','antec','安钛克','great wall','长城','huntkey','航嘉','segotep','耕升','xfx','盈通','maxsun','铭瑄','gainward','映众','palit','昂达','梅捷'];
 // 分词：转小写 -> 去品牌/通用词 -> 去中文标点 -> 含数字的型号词；并对每个词内连写型号(如 rtx4070)再提取子片段
@@ -161,9 +185,11 @@ window.PC = (function () {
   console.log(report.join('\n'));
 
   if (PUBLISH) {
-    // 固定用 8080 端口发布：网关对首发的 3000 端口产物有顽固缓存，
-    // 换端口会创建指向新内容的新 release，否则线上会卡在旧的 8/28 快照。
-    console.log('\n发布到线上 (端口 8080)...');
-    execSync(`node /root/.codebuddy/skills/发布为应用/scripts/publish.js --dir ${ROOT}/web --language static --port 8080`, {stdio:'inherit'});
+    killHttpServers();                                   // 清理旧服务，防端口堆积
+    const port = nextPublishPort();                      // 每次用新端口 -> 强制新 release -> 刷新网关缓存
+    // 发布前给资源打新版本号，破击浏览器/网关缓存（避免用户手机仍读老的 data.js）
+    try { execSync('node scripts/versionize.js', {stdio:'inherit'}); } catch (e) {}
+    console.log(`\n发布到线上 (端口 ${port}, 强制新 release 刷新网关缓存)...`);
+    execSync(`node /root/.codebuddy/skills/发布为应用/scripts/publish.js --dir ${ROOT}/web --language static --port ${port}`, {stdio:'inherit'});
   }
 })();

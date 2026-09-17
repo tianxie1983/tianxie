@@ -8,9 +8,47 @@
   const sheetList = $('#sheet-list');
   const sheetTitle = $('#sheet-title');
   const toastEl = $('#toast');
+  const editor = $('#editor');
+  const editorTitle = $('#editor-title');
+  const editorBody = $('#editor-body');
 
   const DRAFT_KEY = 'pc_draft';
   const BUILDS_KEY = 'pc_builds';
+  const OVR_KEY = 'pc_overrides';
+
+  // ---------- 手动维护价（用户本机覆盖） ----------
+  function getOverrides() {
+    try { return JSON.parse(localStorage.getItem(OVR_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function setOverrides(o) { localStorage.setItem(OVR_KEY, JSON.stringify(o)); }
+  function getOverride(id) { return getOverrides()[id] || null; }
+  function setOverride(id, price, note) {
+    const o = getOverrides();
+    o[id] = { price: Number(price) || 0, note: (note || '').trim(), at: new Date().toISOString() };
+    setOverrides(o);
+  }
+  function clearOverride(id) {
+    const o = getOverrides();
+    delete o[id];
+    setOverrides(o);
+  }
+  function withOverride(p) {
+    if (!p) return p;
+    const o = getOverride(p.id);
+    if (o && o.price != null) {
+      return Object.assign({}, p, { price: Number(o.price), overridden: true, overrideNote: o.note || '', overrideAt: o.at || '' });
+    }
+    return p;
+  }
+  // 让所有读取配件的地方（列表/详情/装机单/算价）都自动应用维护价
+  (function wrapPC() {
+    const _partById = PC.partById.bind(PC);
+    PC.baseById = _partById;
+    PC.partById = id => withOverride(_partById(id));
+    const _partsOfCategory = PC.partsOfCategory.bind(PC);
+    PC.partsOfCategory = key => _partsOfCategory(key).map(withOverride);
+  })();
 
   // ---------- 持久化 ----------
   function getDraft() {
@@ -48,8 +86,9 @@
     const d = new Date(iso), p = n => ('0' + n).slice(-2);
     return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
   }
-  // 价格来源标记：ZOL 自动抓取价 vs 手动维护价
+  // 价格来源标记：ZOL 自动抓取价 vs 手动维护价 vs 我的维护价
   function srcTag(p) {
+    if (p.overridden) return `<span class="src-tag mine">我维护</span>`;
     if (p.priceSource === 'zol') {
       const rng = (p.priceRange && p.priceRange[0] !== p.priceRange[1])
         ? ` ¥${p.priceRange[0]}~${p.priceRange[1]}` : '';
@@ -102,7 +141,7 @@
 
   // ---------- 首页 ----------
   function renderHome() {
-    const hot = PC.parts.filter(p => p.hot).map(p => {
+    const hot = PC.parts.map(withOverride).filter(p => p.hot).map(p => {
       const c = PC.categoryOf(p.category);
       return { ...p, catName: c.name, catIcon: c.icon };
     });
@@ -180,6 +219,8 @@
     const p = PC.partById(state.partId);
     if (!p) { goHome(); return; }
     const cat = PC.categoryOf(p.category);
+    const base = PC.baseById(state.partId) || p;
+    const srcLabel = p.overridden ? '我的维护价' : (p.priceSource === 'zol' ? 'ZOL 参考报价' : '参考报价');
     const specs = (p.specs || []).map(s =>
       `<div class="spec-row"><div class="spec-label">${esc(s.label)}</div><div class="spec-value">${esc(s.value)}</div></div>`).join('');
     view.innerHTML = `
@@ -192,10 +233,11 @@
         <div><div class="detail-name">${esc(p.name)}</div><div class="detail-brand">${cat.name} · ${esc(p.brand)}</div></div>
       </div>
       <div class="price-card card">
-        <div class="price-label">${p.priceSource === 'zol' ? 'ZOL 参考报价' : '参考报价'}</div>
+        <div class="price-label">${srcLabel}</div>
         <div class="price"><span class="price-symbol">¥</span>${p.price}</div>
         ${p.priceSource === 'zol' && p.priceRange ? `<div class="price-range">区间 ¥${p.priceRange[0]} ~ ¥${p.priceRange[1]}</div>` : ''}
-        <div class="price-src">${p.priceSource === 'zol' ? esc(PC.meta && PC.meta.source) : '手动维护'}</div>
+        ${p.overridden && p.overrideNote ? `<div class="price-note">备注：${esc(p.overrideNote)}</div>` : ''}
+        <div class="price-edit" data-action="manual:${p.id}">✎ ${p.overridden ? '修改我的维护价' : '手动维护价 ›'}</div>
       </div>
       <div class="section-title">规格参数</div>
       <div class="spec card">${specs}</div>
@@ -312,6 +354,51 @@
   }
   function closeSheet() { sheet.classList.add('hidden'); }
 
+  // ---------- 手动维护价编辑器 ----------
+  function openEditor(id) {
+    const base = PC.baseById(id);
+    if (!base) return;
+    const ov = getOverride(id);
+    editorTitle.textContent = '维护价 · ' + base.name;
+    editorBody.innerHTML = `
+      <div class="editor-row">
+        <label>参考报价</label>
+        <div class="editor-cur">¥${base.price}${ov ? ` → <b>¥${ov.price}</b>` : ''}</div>
+      </div>
+      <div class="editor-row">
+        <label>我的维护价（¥）</label>
+        <input class="editor-input" id="ovPrice" type="number" inputmode="decimal" value="${ov ? ov.price : base.price}" placeholder="输入你看到的实际价格" />
+      </div>
+      <div class="editor-row">
+        <label>备注（可选）</label>
+        <input class="editor-input" id="ovNote" type="text" value="${ov ? esc(ov.note) : ''}" placeholder="如：京东自营 / 9月行情" />
+      </div>
+      <div class="editor-tip">维护价仅保存在本机浏览器，用于覆盖参考报价，不影响其他用户；可被抓取脚本更新时保留。</div>
+      <div class="editor-actions">
+        ${ov ? `<div class="ba ghost" data-action="editor:clear:${id}">恢复参考价</div>` : ''}
+        <div class="ba primary" data-action="editor:save:${id}">保存</div>
+      </div>`;
+    editor.classList.remove('hidden');
+  }
+  function closeEditor() { editor.classList.add('hidden'); }
+  function saveOverride(id) {
+    const priceEl = $('#ovPrice');
+    const noteEl = $('#ovNote');
+    if (!priceEl) return;
+    const price = Number(priceEl.value);
+    if (!price || price <= 0) { toast('请输入有效价格'); return; }
+    setOverride(id, price, noteEl ? noteEl.value : '');
+    closeEditor();
+    toast('已保存我的维护价');
+    render();
+  }
+  function resetOverride(id) {
+    clearOverride(id);
+    closeEditor();
+    toast('已恢复参考价');
+    render();
+  }
+
   // ---------- 动作处理 ----------
   function handle(action, payload) {
     if (action === 'tab:home') return goHome();
@@ -347,6 +434,10 @@
       return render();
     }
     if (action === 'sheet:close') return closeSheet();
+    if (action.startsWith('manual:')) return openEditor(action.slice(7));
+    if (action === 'editor:close') return closeEditor();
+    if (action.startsWith('editor:save:')) return saveOverride(action.slice(12));
+    if (action.startsWith('editor:clear:')) return resetOverride(action.slice(13));
     if (action.startsWith('pickitem:')) {
       const id = action.slice(9);
       const catKey = sheet.dataset.cat;
@@ -403,6 +494,8 @@
   });
   // 点击弹层遮罩关闭
   sheet.addEventListener('click', e => { if (e.target === sheet) closeSheet(); });
+  // 点击编辑器遮罩关闭
+  editor.addEventListener('click', e => { if (e.target === editor) closeEditor(); });
 
   // 启动
   render();

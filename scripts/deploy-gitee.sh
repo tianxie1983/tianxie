@@ -16,9 +16,13 @@
 set -euo pipefail
 cd "$(cd "$(dirname "$0")" && pwd)/.."
 
-echo "[$(date '+%F %T')] 检查 web/data.js 变更..."
+echo "[$(date '+%F %T')] 将 web/ 同步到 docs/（Gitee Pages 个人版仅支持 / 与 /docs 部署目录，不支持 /web）..."
+rm -rf docs
+cp -r web docs
 
-# 把所有可能改动加入暂存（Gitee Go 工作区干净，通常只有 web/data.js 变化）
+echo "检查 web/data.js 变更..."
+
+# 把所有可能改动加入暂存（Gitee Go 工作区干净，通常只有 web/data.js 与 docs/ 变化）
 git add -A
 
 # 无变化则整段跳过，避免空提交

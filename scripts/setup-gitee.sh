@@ -9,7 +9,7 @@
 #   bash setup-gitee.sh https://gitee.com/your/pc-build.git gitee_xxxx_token
 #
 # 说明: 推送 main(或指定分支) 后，去仓库「服务 → Gitee Pages」选对应分支、
-#       部署目录填 /web，启用即可得到 https://<用户名>.gitee.io/<仓库>/ 的免费站点。
+#       部署目录填 /docs，启用即可得到 https://<用户名>.gitee.io/<仓库>/ 的免费站点。
 # 详见 GITEE_SETUP.md。
 
 set -euo pipefail
@@ -50,7 +50,7 @@ git push -u gitee "$BRANCH"
 
 echo
 echo "✅ 代码已推送到 Gitee。最后一步请在 Gitee 网页端完成："
-echo "   仓库 → 服务 → Gitee Pages → 部署分支选 $BRANCH、部署目录填 /web → 启用"
+echo "   仓库 → 服务 → Gitee Pages → 部署分支选 $BRANCH、部署目录填 /docs → 启用"
 echo "   启用后得到站点: https://<你的Gitee用户名>.gitee.io/<仓库名>/"
 echo "   注意: Gitee Pages 在每次 push 后不会自动重建，需回到 Pages 面板点「更新」"
 echo "         若要全自动(每日抓价后自动重建)，详见 GITEE_SETUP.md 的 Gitee Go 方案。"

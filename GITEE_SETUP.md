@@ -86,3 +86,45 @@
 
 **结论**：只想稳妥地免费长期展示 → Gitee Pages 最省心；想要真正的「每日全自动」→ GitHub+Vercel 更顺。
 两者不冲突，可同时部署。
+
+---
+
+## 四、本次已部署仓库备注
+
+> 以下为当前实际部署信息，方便日后维护与回看。
+
+| 项 | 内容 |
+|----|------|
+| 仓库地址 | `https://gitee.com/shishui_nianhua/tianxie.git` |
+| 用户名 / Owner | `shishui_nianhua` |
+| 仓库名 / Repo | `tianxie` |
+| 推送方式 | **SSH 部署公钥**（已添加到仓库，免令牌推送；公钥标题 `workbuddy-sandbox`） |
+| 站点目录 | 开发源在 `web/`，流水线自动镜像到 `docs/` |
+| Gitee Pages 部署目录 | **`/docs`**（个人版仅支持 `/` 与 `/docs`，故未用 `/web`） |
+| 预期访问地址 | `https://shishui_nianhua.gitee.io/tianxie/` ← **待你在 Pages 面板「启动」后生效** |
+
+### 你还需在 Gitee 网页端做 2 步
+
+**① 启动 Gitee Pages（必做，否则网站打不开）**
+1. 仓库 → **服务 → Gitee Pages**
+2. 部署分支：`main`、部署目录：**`/docs`**、勾「强制使用 HTTPS」→ 启动
+3. 得到上面「预期访问地址」，手机直接打开
+> 前置可能卡点：① Gitee Pages **需实名认证**；② **仓库需公开**（私有仓库 Pages 要会员）。
+
+**② 启用 Gitee Go 全自动（可选，但要每日自动更新价就必做）**
+1. 仓库 → **DevOps → 流水线** → 新建，选 `.workflows/gitee-go.yml`
+2. 「变量与密钥」加三项：
+   - `GITEE_TOKEN`（**密钥**）：具备 `projects` 权限的私人令牌（此处仍需令牌，与①的 SSH 部署密钥不冲突）
+   - `GITEE_OWNER` = `shishui_nianhua`
+   - `GITEE_REPO` = `tianxie`
+3. 保存并运行；定时默认每天 UTC 10:00 抓价→更新→重建
+
+### 完成清单
+
+- ✅ 代码已推送 `main`（含 `web/`、`docs/`、`scripts/`、`GITEE_SETUP.md` 等）
+- ✅ SSH 部署公钥已添加，推送免令牌
+- ⏳ 待你：Gitee Pages「启动」一次（目录 `/docs`）
+- ⏳ 待你（如需全自动）：Gitee Go 配置 `GITEE_TOKEN` / `GITEE_OWNER` / `GITEE_REPO`
+- ⏳ 启动后把访问地址发我，我帮你核验页面是否正常
+
+> 后续若改了 `web/` 内容，直接 `git push gitee main` 即可；`docs/` 会由部署/流水线自动镜像，无需手改。

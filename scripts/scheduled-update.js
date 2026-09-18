@@ -57,8 +57,10 @@ function runNode(scriptRel, opts = {}) {
 }
 
 // 去掉 meta.updatedAt 行，用于判断“真实价格内容”是否变化
+// 同时归一化行尾（CRLF/LF），避免仓库 autocrlf 导致的伪差异
 function stripTimestamp(src) {
   return src
+    .replace(/\r\n/g, '\n')
     .split('\n')
     .filter((l) => !/"updatedAt"/.test(l))
     .join('\n');

@@ -1,0 +1,60 @@
+name: ZOL 链接健康检查
+
+on:
+  schedule:
+    # 每日 UTC 18:47 ≈ 北京时间次日 02:47，错开价格更新(18:17)
+    - cron: '47 18 * * *'
+  workflow_dispatch: {}      # 允许在 Actions 页面手动触发
+
+permissions:
+  contents: read             # 只读仓库
+  issues: write              # 允许开/更新 issue 提醒死链
+
+jobs:
+  link-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 运行 ZOL 链接存活检查（结果存盘供 issue 使用）
+        id: check
+        continue-on-error: true     # 死链不应让 job 变红，提醒以 issue 为主
+        run: |
+          SKIP_PROXY=1 node scripts/check-zol-links.js 2>&1 | tee check_output.txt
+
+      - name: 死链时创建/更新 Issue 提醒
+        if: steps.check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('check_output.txt', 'utf8');
+            const title = '⚠️ ZOL 链接健康检查：发现死链/失效链接';
+            const { owner, repo } = context.repo;
+            const existing = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', per_page: 100
+            });
+            const found = existing.data.find(i => i.title === title);
+            const stamp = new Date().toISOString();
+            const content = `## 自动检测报告
+
+检测时间(UTC)：${stamp}
+
+\`\`\`
+${body}
+\`\`\`
+
+请到 \`scripts/zol-links.json\` 核对并更新失效链接。`;
+            if (found) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: found.number, body: content });
+              console.log('已更新已有 issue #' + found.number);
+            } else {
+              const created = await github.rest.issues.create({ owner, repo, title, body: content });
+              console.log('已创建 issue #' + created.data.number);
+            }

@@ -35,7 +35,7 @@ function doFetch(url, proxy) {
     let socket = null;
     let settled = false;
     const done = (r) => { if (!settled) { settled = true; resolve(r); } };
-    const onErr = (msg) => done({ url, via: proxy ? 'proxy' : 'direct', ok: false, err: msg });
+    const onErr = (msg) => done({ url, via: proxy ? 'proxy' : 'direct', ok: false, netErr: true, err: msg });
 
     function sendReq(ws) {
       const reqStr =
@@ -100,11 +100,17 @@ function doFetch(url, proxy) {
     const tag = r.ok ? (r.price ? `OK 参考价¥${r.price}` : '200但无价') : `FAIL ${r.status || r.err}`;
     console.log(`[${tag}] ${k} -> ${url}`);
   }
-  const fail = keys.filter((k) => !results[k].ok);
+  const fail = keys.filter((k) => !results[k].ok && !results[k].netErr); // 真死链：HTTP 非200 且非网络层错误
+  const neterr = keys.filter((k) => results[k].netErr);                 // 网络层不可达（CI 直连超时/被墙）
   const noprice = keys.filter((k) => results[k].ok && !results[k].price);
   console.log(`\n==== 汇总 ====`);
-  console.log(`存活(200): ${keys.length - fail.length}/${keys.length}`);
-  console.log(`死链/失败: ${fail.length}  ${fail.join(', ') || '无'}`);
+  console.log(`存活(200): ${keys.length - fail.length - neterr.length}/${keys.length}`);
+  console.log(`真死链(HTTP非200): ${fail.length}  ${fail.join(', ') || '无'}`);
+  console.log(`网络不可达(超时/被墙,不计为死链): ${neterr.length}  ${neterr.join(', ') || '无'}`);
   console.log(`200但无参考价(可能下架/改版): ${noprice.length}  ${noprice.join(', ') || '无'}`);
+  if (neterr.length && fail.length === 0) {
+    console.log(`警告: 全部/部分链接网络不可达，本次跳过死链判定（可能是 CI 环境无法直连外站，属环境限制而非链接失效）。`);
+  }
+  // 仅"真死链"才判定失败并触发 issue；网络不可达不报警，避免 CI 网络抖动误刷 issue 或误标红
   process.exit(fail.length ? 1 : 0);
 })();

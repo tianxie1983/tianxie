@@ -1,9 +1,8 @@
 name: 定时更新配件价格
 
 on:
-  schedule:
-    # 每日 UTC 18:17 ≈ 北京时间次日 02:17
-    - cron: '17 18 * * *'
+  # 价格抓取已改由本机定时脚本 scripts/scheduled-update.js 完成（方案 C：GitHub Actions 美国机房 IP 会被 ZOL 限流，且本仓库无中国出口代理）。
+  # 此处仅保留手动触发：将来若在仓库 Secrets 配置了 ZOL_PROXY，可在此手动跑一次 CI 抓价。
   workflow_dispatch: {}      # 允许在 Actions 页面手动触发
 
 permissions:

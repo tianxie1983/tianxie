@@ -1,9 +1,8 @@
 name: ZOL 链接健康检查
 
 on:
-  schedule:
-    # 每日 UTC 18:47 ≈ 北京时间次日 02:47，错开价格更新(18:17)
-    - cron: '47 18 * * *'
+  # ZOL 链接健康检查已并入本机定时脚本 scripts/scheduled-update.js（方案 C：CI 美国机房 IP 直连 ZOL 会被限流，检查无意义）。
+  # 此处仅保留手动触发：若未来配置了 ZOL_PROXY，可在 Actions 页面手动跑一次 CI 检查。
   workflow_dispatch: {}      # 允许在 Actions 页面手动触发
 
 permissions:

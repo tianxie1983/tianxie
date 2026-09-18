@@ -86,7 +86,7 @@ window.PC = (function () {
     "id": "cpu-i7-14700kf",
     "name": "Intel 酷睿 i7-14700KF",
     "brand": "Intel",
-    "price": 3499,
+    "price": 3299,
     "power": 253,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -109,11 +109,7 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      3299,
-      3499
-    ],
-    "url": "https://detail.zol.com.cn/cpu/index1814492.shtml"
+    "url": "https://detail.zol.com.cn/cpu/index1929613.shtml"
   },
   {
     "category": "cpu",
@@ -144,10 +140,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      4999,
-      4999
-    ],
     "url": "https://detail.zol.com.cn/cpu/index1805095.shtml"
   },
   {
@@ -208,10 +200,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      3099,
-      3099
-    ],
     "url": "https://detail.zol.com.cn/cpu/index1440585.shtml"
   },
   {
@@ -242,10 +230,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      5499,
-      5499
-    ],
     "url": "https://detail.zol.com.cn/cpu/index1424741.shtml"
   },
   {
@@ -305,10 +289,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      2599,
-      2600
-    ],
     "url": "https://detail.zol.com.cn/cpu/index1429351.shtml"
   },
   {
@@ -456,10 +436,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      2849,
-      2849
-    ],
     "url": "https://detail.zol.com.cn/cpu/index2018966.shtml"
   },
   {
@@ -496,7 +472,7 @@ window.PC = (function () {
     "id": "mb-b760m",
     "name": "微星 PRO B760M-A DDR5",
     "brand": "MSI",
-    "price": 1049,
+    "price": 949,
     "power": 35,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -519,10 +495,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      659,
-      1899
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index2103759.shtml"
   },
   {
@@ -530,7 +502,7 @@ window.PC = (function () {
     "id": "mb-z790a",
     "name": "华硕 ROG STRIX Z790-A",
     "brand": "ASUS",
-    "price": 2899,
+    "price": 2699,
     "power": 45,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -554,10 +526,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      2899,
-      2899
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index1465548.shtml"
   },
   {
@@ -588,10 +556,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      749,
-      1099
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index2071207.shtml"
   },
   {
@@ -651,10 +615,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      499,
-      779
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index1544325.shtml"
   },
   {
@@ -662,7 +622,7 @@ window.PC = (function () {
     "id": "mb-b760m-tuf",
     "name": "华硕 TUF B760M",
     "brand": "ASUS",
-    "price": 1049,
+    "price": 949,
     "power": 35,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -685,10 +645,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      659,
-      1899
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index2103759.shtml"
   },
   {
@@ -696,7 +652,7 @@ window.PC = (function () {
     "id": "mb-z790-ud",
     "name": "技嘉 Z790 UD",
     "brand": "Gigabyte",
-    "price": 2899,
+    "price": 2699,
     "power": 45,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -719,10 +675,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      2899,
-      2899
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index1465548.shtml"
   },
   {
@@ -783,10 +735,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      749,
-      1099
-    ],
     "url": "https://detail.zol.com.cn/motherboard/index2071207.shtml"
   },
   {
@@ -889,10 +837,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      2499,
-      2499
-    ],
     "url": "https://detail.zol.com.cn/vga/index1794057.shtml"
   },
   {
@@ -964,10 +908,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      22499,
-      23999
-    ],
     "url": "https://detail.zol.com.cn/vga/index2126436.shtml"
   },
   {
@@ -1206,7 +1146,7 @@ window.PC = (function () {
     "id": "gpu-rx9070xt",
     "name": "撼讯 RX 9070 XT",
     "brand": "PowerColor",
-    "price": 5399,
+    "price": 5799,
     "power": 304,
     "hot": true,
     "specs": [
@@ -1224,10 +1164,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      5399,
-      5399
-    ],
     "url": "https://detail.zol.com.cn/vga/index2141540.shtml"
   },
   {
@@ -1253,10 +1189,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      479,
-      479
-    ],
     "url": "https://detail.zol.com.cn/memory/index1948453.shtml"
   },
   {
@@ -1307,10 +1239,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      799,
-      799
-    ],
     "url": "https://detail.zol.com.cn/memory/index1955978.shtml"
   },
   {
@@ -1384,10 +1312,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      479,
-      479
-    ],
     "url": "https://detail.zol.com.cn/memory/index1948453.shtml"
   },
   {
@@ -1437,10 +1361,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      799,
-      799
-    ],
     "url": "https://detail.zol.com.cn/memory/index1955978.shtml"
   },
   {
@@ -1901,7 +1821,7 @@ window.PC = (function () {
     "id": "psu-650",
     "name": "长城 650W 金牌",
     "brand": "GreatWall",
-    "price": 520,
+    "price": 475,
     "power": 0,
     "watt": 650,
     "specs": [
@@ -1919,10 +1839,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      419,
-      520
-    ],
     "url": "https://detail.zol.com.cn/power/index1289953.shtml"
   },
   {
@@ -1948,10 +1864,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      440,
-      699
-    ],
     "url": "https://detail.zol.com.cn/power/index1342457.shtml"
   },
   {
@@ -1978,10 +1890,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      599,
-      1079
-    ],
     "url": "https://detail.zol.com.cn/power/index1379628.shtml"
   },
   {
@@ -2007,10 +1915,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      794,
-      899
-    ],
     "url": "https://detail.zol.com.cn/power/index299190.shtml"
   },
   {
@@ -2060,10 +1964,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      440,
-      699
-    ],
     "url": "https://detail.zol.com.cn/power/index1342457.shtml"
   },
   {
@@ -2161,10 +2061,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      129,
-      169
-    ],
     "url": "https://detail.zol.com.cn/case/index1980292.shtml"
   },
   {
@@ -2282,10 +2178,6 @@ window.PC = (function () {
       }
     ],
     "priceSource": "zol",
-    "priceRange": [
-      129,
-      169
-    ],
     "url": "https://detail.zol.com.cn/case/index1980292.shtml"
   },
   {
@@ -2424,7 +2316,7 @@ window.PC = (function () {
   }
 ];
   const meta = {
-  "updatedAt": "2026-09-18T05:07:21.727Z",
+  "updatedAt": "2026-09-18T06:43:40.758Z",
   "source": "中关村在线(ZOL)公开参考价",
   "autoCount": 27,
   "manualCount": 61,

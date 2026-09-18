@@ -93,7 +93,19 @@ async function directGet(url, timeout) {
 
 async function fetchZol(url, { timeout = 15000 } = {}) {
   const proxy = getProxy();
-  if (proxy) return await tunnelGet(url, proxy, timeout);
+  if (proxy) {
+    const r = await tunnelGet(url, proxy, timeout);
+    // 代理本身不可达（netErr）时回退直连：真实机器上代理可能不存在，
+    // 而中国 IP 直连 ZOL 通常也能拿到 200，借此提升任务计划版的可用性。
+    // 注意：若代理可达但 ZOL 返 403/429/503（限流），则 limited=true、netErr=false，
+    // 不回退（直连更不可能过），直接返回该结果。
+    if (r.netErr) {
+      const d = await directGet(url, timeout);
+      d.via = 'proxy-unreachable→direct';
+      return d;
+    }
+    return r;
+  }
   return await directGet(url, timeout);
 }
 

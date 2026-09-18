@@ -2,6 +2,8 @@
 // check-zol-links.js —— 只读自检 scripts/zol-links.json 中每条 ZOL 链接是否存活 + 能否解析参考价
 // 设计：纯读取，绝不写入 web/data.js。网络策略：优先直连；若直连失败且环境提供 HTTPS_PROXY，
 //       则自动走代理 CONNECT 隧道回退（适配沙箱/企业网）。CI(直连)环境可加 SKIP_PROXY=1 跳过代理。
+// 重要：目标站(如 ZOL)对境外/非常用 IP 会返回 403/429/503 限流，这属"环境限制"而非链接失效，
+//       此类响应不计为死链、不报警、不标红，避免 CI/地域网络抖动误刷 issue。
 // 用法:
 //   node scripts/check-zol-links.js              # 本地/沙箱，直连失败自动走代理
 //   SKIP_PROXY=1 node scripts/check-zol-links.js # CI 直连环境，不尝试代理
@@ -60,7 +62,9 @@ function doFetch(url, proxy) {
           const m = html.match(/price-type[^>]*>(\d+(?:\.\d+)?)/);
           if (m) price = parseFloat(m[1]);
         } catch (e) {}
-        done({ url, via: proxy ? 'proxy' : 'direct', ok: status === 200, status, price });
+        // 403/429/503 多为目标站对境外/非常用 IP 的限流或临时拒绝，属环境限制而非链接失效
+        const limited = [403, 429, 503].includes(status);
+        done({ url, via: proxy ? 'proxy' : 'direct', ok: status === 200, status, limited, price });
       });
       ws.on('error', (e) => onErr(e.message));
     }
@@ -97,20 +101,23 @@ function doFetch(url, proxy) {
     if (!r.ok && PROXY) r = await doFetch(url, PROXY); // 直连失败且环境有代理 -> 回退
     cache[url] = r;
     results[k] = r;
-    const tag = r.ok ? (r.price ? `OK 参考价¥${r.price}` : '200但无价') : `FAIL ${r.status || r.err}`;
+    const tag = r.ok ? (r.price ? `OK 参考价¥${r.price}` : '200但无价') : (r.limited ? `LIMITED ${r.status}` : `FAIL ${r.status || r.err}`);
     console.log(`[${tag}] ${k} -> ${url}`);
   }
-  const fail = keys.filter((k) => !results[k].ok && !results[k].netErr); // 真死链：HTTP 非200 且非网络层错误
+  // 真死链：HTTP 非200 且非网络层错误、非限流（限流/网络不可达均不视为链接失效）
+  const fail = keys.filter((k) => !results[k].ok && !results[k].netErr && !results[k].limited);
   const neterr = keys.filter((k) => results[k].netErr);                 // 网络层不可达（CI 直连超时/被墙）
+  const limited = keys.filter((k) => results[k].limited);               // 疑似限流/临时拒绝（多为 IP 地域限制）
   const noprice = keys.filter((k) => results[k].ok && !results[k].price);
   console.log(`\n==== 汇总 ====`);
-  console.log(`存活(200): ${keys.length - fail.length - neterr.length}/${keys.length}`);
-  console.log(`真死链(HTTP非200): ${fail.length}  ${fail.join(', ') || '无'}`);
+  console.log(`存活(200): ${keys.length - fail.length - neterr.length - limited.length}/${keys.length}`);
+  console.log(`真死链(HTTP非200且非限流): ${fail.length}  ${fail.join(', ') || '无'}`);
+  console.log(`疑似限流/拒绝(403/429/503,不计为死链): ${limited.length}  ${limited.join(', ') || '无'}`);
   console.log(`网络不可达(超时/被墙,不计为死链): ${neterr.length}  ${neterr.join(', ') || '无'}`);
   console.log(`200但无参考价(可能下架/改版): ${noprice.length}  ${noprice.join(', ') || '无'}`);
-  if (neterr.length && fail.length === 0) {
-    console.log(`警告: 全部/部分链接网络不可达，本次跳过死链判定（可能是 CI 环境无法直连外站，属环境限制而非链接失效）。`);
+  if ((neterr.length || limited.length) && fail.length === 0) {
+    console.log(`警告: 全部/部分链接网络不可达或遭限流，本次跳过死链判定（多为 CI/境外 IP 被目标站限制，属环境限制而非链接失效）。`);
   }
-  // 仅"真死链"才判定失败并触发 issue；网络不可达不报警，避免 CI 网络抖动误刷 issue 或误标红
+  // 仅"真死链"才判定失败并触发 issue；网络不可达/限流不报警，避免 CI/地域网络抖动误刷 issue 或误标红
   process.exit(fail.length ? 1 : 0);
 })();

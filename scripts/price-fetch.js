@@ -2,10 +2,11 @@
 // price-fetch.js —— 按 scripts/zol-links.json 指定的 ZOL 商品页精确抓取参考价，重新生成 web/data.js
 // 设计：data/parts.js 为唯一数据源；本脚本只负责把「有精确链接」的配件价格刷新为 ZOL 实时参考价，
 //       其余配件保留 data/parts.js 中的手动价。生成结果可被前端 app.js 的「ZOL 参考报价 / 详情页跳转」功能消费。
+// 代理：优先走 ZOL_PROXY/HTTPS_PROXY 代理隧道（CI/境外 IP 被 ZOL 限流时必须），无代理回退直连。SKIP_PROXY=1 强制直连。
 // 用法: node scripts/price-fetch.js
 const fs = require('fs');
 const path = require('path');
-const { TextDecoder } = require('util');
+const { fetchZol } = require('./zol-fetch');
 
 // ROOT：优先环境变量，否则用脚本所在目录的上一级（本地与 GitHub Actions 通用）
 const ROOT = process.env.REPO_ROOT || path.resolve(__dirname, '..');
@@ -22,32 +23,19 @@ try {
   console.warn('[warn] 读取 scripts/zol-links.json 失败，将全部保留手动价:', e.message);
 }
 
-// GBK 解码抓取单个 ZOL 商品页，返回参考价（price-type 锚点）
+// 抓取单个 ZOL 商品页参考价（price-type 锚点）。统一由 scripts/zol-fetch.js 处理代理隧道、GBK 解码与限流识别。
 async function fetchZolPrice(url) {
   try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 15000);
-    const res = await fetch(url, {
-      headers: {
-        'User-Agent': UA,
-        'Accept-Language': 'zh-CN,zh;q=0.9',
-        'Accept': 'text/html,application/xhtml+xml',
-      },
-      signal: ctrl.signal,
-      redirect: 'follow',
-    });
-    clearTimeout(timer);
-    if (!res.ok) {
-      console.warn('  [fetch] 非 200 响应:', res.status, url);
+    const r = await fetchZol(url, { timeout: 15000 });
+    if (!r.ok) {
+      console.warn('  [fetch] 响应异常:', r.status || (r.netErr ? '网络错误:' + r.err : ''), url);
       return null;
     }
-    const buf = Buffer.from(await res.arrayBuffer());
-    const html = new TextDecoder('gbk').decode(buf);
-    // ZOL 详情页主参考价锚点：price-type">699</b>
-    const m = html.match(/price-type[^>]*>(\d+(?:\.\d+)?)/);
-    if (m) return parseFloat(m[1]);
-    console.warn('  [fetch] 未解析到参考价:', url);
-    return null;
+    if (r.price == null) {
+      console.warn('  [fetch] 未解析到参考价:', url);
+      return null;
+    }
+    return r.price;
   } catch (e) {
     console.warn('  [fetch] 请求失败:', url, e.message);
     return null;

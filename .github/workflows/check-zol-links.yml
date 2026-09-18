@@ -13,6 +13,10 @@ permissions:
 jobs:
   link-health:
     runs-on: ubuntu-latest
+    env:
+      # 同 price-update：CI 必须走中国出口代理才能访问 ZOL（避免被限流判死链）。
+      # 代理地址配置在仓库 Secrets 的 ZOL_PROXY。
+      ZOL_PROXY: ${{ secrets.ZOL_PROXY }}
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
@@ -26,7 +30,7 @@ jobs:
         id: check
         continue-on-error: true     # 死链不应让 job 变红，提醒以 issue 为主
         run: |
-          SKIP_PROXY=1 node scripts/check-zol-links.js 2>&1 | tee check_output.txt
+          node scripts/check-zol-links.js 2>&1 | tee check_output.txt
 
       - name: 死链时创建/更新 Issue 提醒
         if: steps.check.outcome == 'failure'

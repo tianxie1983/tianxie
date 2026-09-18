@@ -12,6 +12,11 @@ permissions:
 jobs:
   update-prices:
     runs-on: ubuntu-latest
+    env:
+      # GitHub Actions 美国机房 IP 会被 ZOL 限流(403/429/503)，必须经中国出口代理才能拿到价格。
+      # 代理地址配置在仓库 Secrets: Settings -> Secrets and variables -> Actions -> New repository secret
+      # 名称 ZOL_PROXY，值形如 http://host:port 或 http://user:pass@host:port（不要明文写在代码里）。
+      ZOL_PROXY: ${{ secrets.ZOL_PROXY }}
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4

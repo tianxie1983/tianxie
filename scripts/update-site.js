@@ -92,12 +92,20 @@ if (noPush) {
       const remote = remotes.includes('gitee') ? 'gitee' : (remotes.includes('origin') ? 'origin' : null);
       if (!remote) { warn('未检测到 git 远程，已跳过推送（本地已更新）'); }
       else {
-        run(`git commit -m "chore: 一键更新价格与部署包 $(date +%F)"`);
-        run(`git push ${remote} ${branch}`);
-        ok(`已推送到 ${remote}/${branch}`);
+      run(`git commit -m "chore: 一键更新价格与部署包 $(date +%F)"`);
+      // 推送前先 rebase，避免与远端（例如另一台电脑/沙箱）的提交冲突被拒
+      try {
+        run(`git pull --rebase ${remote} ${branch}`);
+      } catch (pe) {
+        run('git rebase --abort');
+        warn(`与远端 ${remote}/${branch} 冲突，已中止推送。请手动处理冲突后再 push。`);
+        return;
       }
+      run(`git push ${remote} ${branch}`);
+      ok(`已推送到 ${remote}/${branch}`);
     }
-  } catch (e) { warn('提交/推送失败（可能需配置 Git 凭据）。本地文件已更新，可稍后手动 push。'); }
+  }
+} catch (e) { warn('提交/推送失败（可能需配置 Git 凭据）。本地文件已更新，可稍后手动 push。'); }
 }
 
 // ---------- 完成 ----------

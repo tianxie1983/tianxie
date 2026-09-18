@@ -24,14 +24,16 @@ jobs:
       - name: 抓取最新价格并生成 data.js
         run: node scripts/price-fetch.js
 
-      - name: 提交并推送（触发 Vercel/Netlify/Pages 自动部署）
+      - name: 仅在有变化时刷新缓存版本号并提交
         run: |
           git config user.name "price-bot"
           git config user.email "bot@workbuddy.local"
-          git add web/data.js
-          if git diff --cached --quiet; then
-            echo "价格无变化，跳过提交"
+          if git diff --quiet web/data.js; then
+            echo "价格无变化，跳过本次部署"
           else
+            node scripts/versionize.js
+            git add web/data.js web/index.html
             git commit -m "chore: 自动更新配件价格 $(date +%F)"
             git push
+            echo "已推送新价格，Netlify 将自动重新部署"
           fi

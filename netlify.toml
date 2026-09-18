@@ -1,0 +1,5 @@
+[build]
+  # 站点文件都在 web/ 子目录下，发布目录指向它
+  publish = "web"
+  # 纯静态站点，无需构建命令
+  command = "echo 'static site, no build step'"

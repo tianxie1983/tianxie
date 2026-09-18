@@ -278,7 +278,7 @@ window.PC = (function () {
     "id": "cpu-i5-13600kf",
     "name": "Intel 酷睿 i5-13600KF",
     "brand": "Intel",
-    "price": 2599,
+    "price": 2600,
     "power": 181,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -303,7 +303,7 @@ window.PC = (function () {
     "priceSource": "zol",
     "priceRange": [
       2599,
-      2599
+      2600
     ]
   },
   {
@@ -1900,7 +1900,7 @@ window.PC = (function () {
     ],
     "priceSource": "zol",
     "priceRange": [
-      520,
+      419,
       520
     ]
   },
@@ -2397,7 +2397,7 @@ window.PC = (function () {
   }
 ];
   const meta = {
-  "updatedAt": "2026-09-16T13:06:29.860Z",
+  "updatedAt": "2026-09-18T02:31:24.536Z",
   "source": "中关村在线(ZOL)公开参考价",
   "autoCount": 27,
   "manualCount": 61,

@@ -89,11 +89,13 @@ function parseZOL(html){
   const liRe = /<li[^>]*>([\s\S]*?)<\/li>/g; let m;
   while ((m = liRe.exec(html))) {
     const block = m[1];
-    const t = block.match(/<h3><a[^>]*title="([^"]+)"/);
+    const a = block.match(/<h3><a[^>]*href="([^"]+)"[^>]*title="([^"]+)"/);
     const p = block.match(/price-type">(\d+(?:\.\d+)?)/);
-    if (t && p) {
-      const name = t[1].trim();
-      items.push({ name, price: parseFloat(p[1]) });
+    if (a && p) {
+      const href = a[1].trim();
+      const name = a[2].trim();
+      const url = href.startsWith('http') ? href : 'https://detail.zol.com.cn' + (href.startsWith('/') ? '' : '/') + href;
+      items.push({ name, price: parseFloat(p[1]), url });
     }
   }
   return items;
@@ -113,7 +115,9 @@ function matchPart(part, zolItems){
   if (hits.length) {
     const prices = hits.map(h => h.price).sort((a,b) => a-b);
     const mid = prices[Math.floor(prices.length/2)];
-    return { price: mid, count: hits.length, range: [prices[0], prices[prices.length-1]] };
+    // 选价格最接近中位数的命中，取其商品页 url（更可能对应同一款）
+    const best = hits.reduce((a,b) => Math.abs(b.price - mid) < Math.abs(a.price - mid) ? b : a);
+    return { price: mid, count: hits.length, range: [prices[0], prices[prices.length-1]], url: best.url };
   }
   return null;
 }
@@ -135,6 +139,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         part.priceSource = 'zol';
         part.priceRange = r.range;
         part.priceMatched = r.token;
+        if (r.url) part.url = r.url;          // ZOL 商品页链接，详情页可点击跳转
         autoCount++;
         report.push(`[ZOL ] ${part.name}  ->  ¥${part.price}  (区间¥${r.range[0]}~¥${r.range[1]}, 命中${r.count})`);
       } else {

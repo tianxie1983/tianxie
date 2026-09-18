@@ -193,6 +193,8 @@ button { font-family: inherit; }
 /* 手动维护价：可点击入口 */
 .price-edit { margin-top: 10px; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #f3f5ff; color: var(--primary); border: 1px solid #c5cbff; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; }
 .price-edit:active { background: #e6e9ff; }
+.price-link { margin-top: 10px; margin-left: 8px; display: inline-flex; align-items: center; gap: 2px; padding: 6px 12px; background: #eafaf0; color: #1a8a4a; border: 1px solid #b6e3c8; border-radius: 999px; font-size: 12px; font-weight: 600; text-decoration: none; }
+.price-link:active { background: #d8f3e4; }
 
 /* ---------- 手动维护价编辑器 ---------- */
 .editor-mask { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; z-index: 60; }

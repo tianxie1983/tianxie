@@ -238,6 +238,7 @@
         ${p.priceSource === 'zol' && p.priceRange ? `<div class="price-range">区间 ¥${p.priceRange[0]} ~ ¥${p.priceRange[1]}</div>` : ''}
         ${p.overridden && p.overrideNote ? `<div class="price-note">备注：${esc(p.overrideNote)}</div>` : ''}
         <div class="price-edit" data-action="manual:${p.id}">✎ ${p.overridden ? '修改我的维护价' : '手动维护价 ›'}</div>
+        ${p.priceSource === 'zol' && p.url ? `<a class="price-link" href="${esc(p.url)}" target="_blank" rel="noopener">查看 ZOL 商品页 ›</a>` : ''}
       </div>
       <div class="section-title">规格参数</div>
       <div class="spec card">${specs}</div>

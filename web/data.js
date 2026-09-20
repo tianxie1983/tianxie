@@ -86,7 +86,7 @@ window.PC = (function () {
     "id": "cpu-i7-14700kf",
     "name": "Intel 酷睿 i7-14700KF",
     "brand": "Intel",
-    "price": 3299,
+    "price": 2949,
     "power": 253,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -108,8 +108,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1929613.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
@@ -176,7 +175,7 @@ window.PC = (function () {
     "id": "cpu-r7-7800x3d",
     "name": "AMD 锐龙 R7 7800X3D",
     "brand": "AMD",
-    "price": 3099,
+    "price": 2899,
     "power": 120,
     "socket": "AM5",
     "memType": "DDR5",
@@ -199,8 +198,7 @@ window.PC = (function () {
         "value": "AM5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1440585.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
@@ -1821,7 +1819,7 @@ window.PC = (function () {
     "id": "psu-650",
     "name": "长城 650W 金牌",
     "brand": "GreatWall",
-    "price": 475,
+    "price": 359,
     "power": 0,
     "watt": 650,
     "specs": [
@@ -1838,15 +1836,14 @@ window.PC = (function () {
         "value": "全模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index1289953.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
     "id": "psu-750",
     "name": "酷冷至尊 750W 金牌",
     "brand": "CoolerMaster",
-    "price": 699,
+    "price": 459,
     "power": 0,
     "watt": 750,
     "specs": [
@@ -1863,8 +1860,7 @@ window.PC = (function () {
         "value": "全模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index1342457.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
@@ -1946,7 +1942,7 @@ window.PC = (function () {
     "id": "psu-750a",
     "name": "安钛克 750W 金牌",
     "brand": "Antec",
-    "price": 699,
+    "price": 499,
     "power": 0,
     "watt": 750,
     "specs": [
@@ -1963,8 +1959,7 @@ window.PC = (function () {
         "value": "全模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index1342457.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
@@ -2060,8 +2055,7 @@ window.PC = (function () {
         "value": "165mm"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1980292.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
@@ -2161,7 +2155,7 @@ window.PC = (function () {
     "id": "chassis-yogo",
     "name": "爱国者 YOGO M2",
     "brand": "aigo",
-    "price": 159,
+    "price": 259,
     "power": 5,
     "specs": [
       {
@@ -2177,8 +2171,7 @@ window.PC = (function () {
         "value": "168mm"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1980292.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
@@ -2316,10 +2309,10 @@ window.PC = (function () {
   }
 ];
   const meta = {
-  "updatedAt": "2026-09-18T11:16:49.374Z",
+  "updatedAt": "2026-09-20T00:27:51.517Z",
   "source": "中关村在线(ZOL)公开参考价",
-  "autoCount": 27,
-  "manualCount": 61,
+  "autoCount": 20,
+  "manualCount": 68,
   "total": 88,
   "note": "价格随行情波动，仅供参考；未匹配到公开报价的配件保留原价。"
 };

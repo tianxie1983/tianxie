@@ -3,3 +3,12 @@
   publish = "web"
   # 纯静态站点，无需构建命令
   command = "echo 'static site, no build step'"
+
+# 关闭右下角 "Powered by Netlify" 浮标（Netlify 在边缘注入，非源码）。
+# 只严格限制 script / frame，挡掉 Netlify 注入的 badge 脚本与 iframe；
+# 其余（样式/图片/字体/连接）保持宽松，避免误伤本站。
+# 已在本地核查 app.js 无外部脚本、无内联 on* 事件、无 eval，本策略安全。
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; frame-src 'none'; connect-src 'self'; base-uri 'self'"

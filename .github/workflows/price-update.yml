@@ -1,8 +1,17 @@
-name: 定时更新配件价格
+name: 每日自动更新配件价格
+
+# 全自动方案：平台侧 CI 自行抓价、提交、推送，无需本机参与。
+# - 抓取：GitHub Actions 默认跑在美国机房 IP，直连 ZOL 可能被限流(403/429/503)。
+#   脚本已做抗限流（重试+退避+完整 UA），并通过「抓取成功率过低则不写 data.js」保护，
+#   避免残缺数据覆盖好版本。若被限流，本次 job 跳过提交，次日再试。
+# - 真正稳定的主力执行器是 Gitee Go（国内 IP，见仓库 .workflow/daily-price-update.yml），
+#   Gitee Go 抓取不受限，会产出完整数据并同步到 GitHub。两条流水线互为兜底。
+# - 推送：GitHub 用内置 GITHUB_TOKEN；Gitee 用仓库 Secrets 中的 GITEE_TOKEN。
 
 on:
-  # 价格抓取已改由本机定时脚本 scripts/scheduled-update.js 完成（方案 C：GitHub Actions 美国机房 IP 会被 ZOL 限流，且本仓库无中国出口代理）。
-  # 此处仅保留手动触发：将来若在仓库 Secrets 配置了 ZOL_PROXY，可在此手动跑一次 CI 抓价。
+  schedule:
+    # UTC 18:17 = 北京时间次日 02:17
+    - cron: '17 18 * * *'
   workflow_dispatch: {}      # 允许在 Actions 页面手动触发
 
 permissions:
@@ -12,32 +21,48 @@ jobs:
   update-prices:
     runs-on: ubuntu-latest
     env:
-      # GitHub Actions 美国机房 IP 会被 ZOL 限流(403/429/503)，必须经中国出口代理才能拿到价格。
-      # 代理地址配置在仓库 Secrets: Settings -> Secrets and variables -> Actions -> New repository secret
-      # 名称 ZOL_PROXY，值形如 http://host:port 或 http://user:pass@host:port（不要明文写在代码里）。
-      ZOL_PROXY: ${{ secrets.ZOL_PROXY }}
+      GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+      SKIP_PROXY: '1'        # CI 无本机代理，强制直连 ZOL（不读 HTTPS_PROXY）
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 配置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: 抓取最新价格并生成 data.js
+      - name: 抓取最新价格并生成 data.js（被限流时自动跳过，保留上次数据）
+        id: fetch
+        continue-on-error: true   # 限流导致 price-fetch 退出非0 时，不阻断后续 diff 判断
         run: node scripts/price-fetch.js
 
-      - name: 仅在有变化时刷新缓存版本号并提交
+      - name: 判断是否有实质变化并提交
+        id: commit
         run: |
           git config user.name "price-bot"
           git config user.email "bot@workbuddy.local"
           if git diff --quiet web/data.js; then
-            echo "价格无变化，跳过本次部署"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "价格无变化（或抓取被限流跳过），本次不提交"
           else
             node scripts/versionize.js
             git add web/data.js web/index.html
             git commit -m "chore: 自动更新配件价格 $(date +%F)"
-            git push
-            echo "已推送新价格，Netlify 将自动重新部署"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: 推送 GitHub（GITHUB_TOKEN）
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tianxie1983/tianxie.git"
+          git push origin HEAD:main
+
+      - name: 推送 Gitee（GITEE_TOKEN）
+        if: steps.commit.outputs.changed == 'true' && env.GITEE_TOKEN != ''
+        run: |
+          git remote add gitee "https://oauth2:${{ secrets.GITEE_TOKEN }}@gitee.com/shishui_nianhua/tianxie.git" \
+            || git remote set-url gitee "https://oauth2:${{ secrets.GITEE_TOKEN }}@gitee.com/shishui_nianhua/tianxie.git"
+          git push gitee HEAD:main

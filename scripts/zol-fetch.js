@@ -70,23 +70,45 @@ function tunnelGet(url, proxy, timeout) {
   });
 }
 
-// Node 内置 fetch 直连（无代理环境）。CI 直连 ZOL 会被限流，故仅作为无代理时的回退
-async function directGet(url, timeout) {
+// 随机延时（带抖动），用于重试退避，避免固定节奏被风控识别
+function jitter(ms) {
+  return ms + Math.floor(Math.random() * 800);
+}
+
+// Node 内置 fetch 直连（无代理环境，CI 默认走这条路径）。
+// 抗限流增强：完整浏览器请求头 + 失败重试（指数退避 + 随机抖动），
+// 缓解境外 IP（如 GitHub Actions 美国机房）被 ZOL 偶发限流；国内 IP（Gitee Go）基本一次成功。
+async function directGet(url, timeout, attempt = 1) {
+  const MAX = 3;
+  const headers = {
+    'User-Agent': UA,
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Referer': 'https://www.zol.com.cn/',
+  };
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeout);
-    const res = await fetch(url, {
-      headers: { 'User-Agent': UA, 'Accept-Language': 'zh-CN,zh;q=0.9', 'Accept': 'text/html,application/xhtml+xml' },
-      signal: ctrl.signal,
-      redirect: 'follow',
-    });
+    const res = await fetch(url, { headers, signal: ctrl.signal, redirect: 'follow' });
     clearTimeout(timer);
     const buf = Buffer.from(await res.arrayBuffer());
     let html = '';
     try { html = new TextDecoder('gbk').decode(buf); } catch (e) {}
     const limited = [403, 429, 503].includes(res.status);
-    return { ok: res.ok, status: res.status, limited, netErr: false, price: extractPrice(html), html, via: 'direct' };
+    // 限流或状态码异常时重试（同一境外 IP 可能连续限流，重试主要缓解偶发/瞬时）
+    if ((limited || !res.ok) && attempt < MAX) {
+      await new Promise((r) => setTimeout(r, jitter(1000 * attempt)));
+      return directGet(url, timeout, attempt + 1);
+    }
+    return { ok: res.ok && !limited, status: res.status, limited, netErr: false, price: extractPrice(html), html, via: 'direct' };
   } catch (e) {
+    if (attempt < MAX) {
+      await new Promise((r) => setTimeout(r, jitter(1000 * attempt)));
+      return directGet(url, timeout, attempt + 1);
+    }
     return { ok: false, status: 0, limited: false, netErr: true, price: null, html: '', via: 'direct', err: e.message };
   }
 }

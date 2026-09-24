@@ -1,0 +1,59 @@
+version: '1.0'
+name: 每日自动更新配件价格（Gitee Go · 国内 IP 主力）
+
+# 说明：Gitee Go 的 runner 部署在国内 IP，直连 ZOL 不会被限流，是「平台自己执行」最稳的抓价器。
+# 它抓取 27 款 ZOL 参考价 → 提交 → 同时推送 Gitee（自带仓库权限）与 GitHub（用 GITHUB_TOKEN）。
+# 与 GitHub Actions（美国 IP，见 .github/workflows/price-update.yml）互为兜底，任一条成功即更新。
+#
+# 使用前需在 Gitee 平台开启 Gitee Go 并配置流水线环境变量：
+#   GITEE_USERNAME  你的 Gitee 用户名
+#   GITEE_TOKEN     Gitee 私人令牌（projects 权限）
+#   GITHUB_USERNAME 你的 GitHub 用户名（tianxie1983）
+#   GITHUB_TOKEN    GitHub Personal Access Token（contents:write）
+# 注：cron 为 UTC 时间，'17 18 * * *' = 北京时间次日 02:17。
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    cron: '17 18 * * *'
+
+jobs:
+  build:
+    runs-on:
+      - linux
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: '0'
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v1
+        with:
+          version: '18'
+
+      - name: 抓取 ZOL 最新价格并生成 data.js
+        run: node scripts/price-fetch.js
+
+      - name: 提交并推送 Gitee + GitHub
+        run: |
+          git config user.name "price-bot"
+          git config user.email "bot@workbuddy.local"
+          if git diff --quiet web/data.js; then
+            echo "价格无变化，跳过提交"
+            exit 0
+          fi
+          node scripts/versionize.js
+          git add web/data.js web/index.html
+          git commit -m "chore: 自动更新配件价格 $(date +%F)"
+
+          # 推送 Gitee（当前仓库，用流水线环境变量中的令牌）
+          git remote set-url origin "https://${GITEE_USERNAME}:${GITEE_TOKEN}@gitee.com/shishui_nianhua/tianxie.git"
+          git push origin HEAD:main
+
+          # 推送 GitHub（用 GitHub PAT）
+          git remote add github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/tianxie1983/tianxie.git" \
+            || git remote set-url github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/tianxie1983/tianxie.git"
+          git push github HEAD:main

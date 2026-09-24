@@ -48,6 +48,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const updated = data.parts.map((p) => ({ ...p }));
   let autoCount = 0;
   let manualCount = 0;
+  let expectedAuto = 0; // 应抓取（有 ZOL 链接）的配件数，用于判断抓取是否被限流
   const report = [];
   const cache = {}; // url -> price（同链接多配件只抓一次，省请求）
 
@@ -59,6 +60,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       report.push(`[手动] ${part.name} -> 保留 ¥${part.price}`);
       continue;
     }
+    expectedAuto++; // 有 ZOL 链接，应被自动抓取
     let price = cache[url];
     if (price === undefined) {
       price = await fetchZolPrice(url);
@@ -76,6 +78,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       manualCount++;
       report.push(`[手动] ${part.name} -> 保留 ¥${part.price}  (抓取失败)`);
     }
+  }
+
+  // 防覆盖保护：若成功抓取比例过低（疑似被 ZOL 限流或网络异常），
+  // 则不覆盖 web/data.js，保留上次的完整数据，避免残缺/旧价污染站点。
+  const ratio = expectedAuto > 0 ? autoCount / expectedAuto : 1;
+  if (ratio < 0.5) {
+    console.error(`\n[price-fetch] ⚠️ 仅成功抓取 ${autoCount}/${expectedAuto} 款（比例 ${ratio.toFixed(2)} < 0.5）`);
+    console.error('[price-fetch] 疑似被 ZOL 限流或网络异常；为保留上次完整数据，本次不覆盖 web/data.js。');
+    process.exit(1);
   }
 
   const meta = {

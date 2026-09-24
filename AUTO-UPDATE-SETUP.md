@@ -43,7 +43,12 @@
 
 1. 打开 [app.netlify.com](https://app.netlify.com) → 进入站点 `frolicking-panda-50736e`
 2. **Build & deploy → Connect repository** → 选 GitHub 仓库 `tianxie1983/tianxie`
-3. 发布目录（Publish directory）填 **`web`**，构建命令留空，保存
+3. **Base directory（构建基础目录）保持仓库根目录**（务必**不要**填 `web`）；
+   发布目录（Publish directory）填 **`web`**，构建命令留空，保存
+   > 这样 Netlify 才会读取仓库**根目录唯一的 `netlify.toml`**（该文件已内含 `publish="web"`
+   > 与关闭角标的 CSP 规则）。
+   > ⚠️ **易踩坑**：若把 Base directory 误填成 `web`，Netlify 会改读 `web/netlify.toml`
+   > 而忽略根配置——结果 CSP 不生效、角标兜底失效。本项目已把配置统一收敛到根目录一份。
 4. 点 **Trigger deploy → Deploy site** 手动触发一次，确认能拉到最新代码
 5. 顺手关闭角标：**Site configuration → General → Powered by Netlify badge → 关闭**
 
@@ -113,3 +118,5 @@
 - 抓取脚本：`scripts/price-fetch.js`（聚合）、`scripts/zol-fetch.js`（直连抓取，含抗限流）
 - 防覆盖保护：抓取成功率 < 0.5 时不写 `data.js`，保留上次完整数据
 - 发布目录：**`web`**
+- 配置文件：**仓库根目录唯一一份 `netlify.toml`**（含 `publish="web"` 与关角标 CSP）；Netlify 的 Base directory 须为仓库根，**不要填 `web`**，否则会误读 `web/netlify.toml` 而绕过根配置
+  （过渡期：本仓库当前仍临时保留 `web/netlify.toml` 作角标兜底，待 Netlify 改回根目录部署确认无误后会被删除，最终仅剩根目录一份）

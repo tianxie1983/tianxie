@@ -13,6 +13,15 @@
 | `cover.png` | 分享封面图（1200×630，微信/社交分享卡片用） |
 | `vercel.json` | Vercel 部署配置 |
 | `netlify.toml` | Netlify 部署配置 |
+
+## 双轨托管（Netlify 额度耗尽时的备份）
+
+已在仓库根新增 `.github/workflows/deploy-pages.yml`：当 `web/` 目录有变化（含每日 CI 更新的 `data.js`）时，
+自动部署到 **GitHub Pages**（免费、构建次数无限、无角标）。
+
+- 启用：GitHub 仓库 → Settings → Pages → Build and deployment → Source 选 **「GitHub Actions」**
+- 上线后地址：`https://tianxie1983.github.io/tianxie/`
+- 页面全部使用相对路径，在 GitHub Pages 子路径下可正常运行。
 | `nginx.example.conf` | 自有服务器 Nginx 示例配置 |
 | `.nojekyll` | GitHub Pages 跳过 Jekyll 处理 |
 

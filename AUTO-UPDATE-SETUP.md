@@ -1,5 +1,9 @@
 # 装机大师 · 自动更新与部署配置指南
 
+> **当前可访问地址（首选 GitHub Pages）**
+> - **GitHub Pages（首选）**：https://tianxie1983.github.io/tianxie/ —— 每日自动更新，数据最新（截至 2026-09-28）。
+> - Netlify（备用）：https://frolicking-panda-50736e.netlify.app/ —— 免费构建额度耗尽已暂停，停在 2026-09-24，待额度重置后恢复。
+
 > 本文档说明「装机大师」PC 配件价格站如何实现**全平台自动抓价 + 自动部署**，
 > 以及首次上线时需要在各平台做的一次性配置。配置完成后，每天 **北京时间 02:17**
 > 自动抓取 ZOL 价格、提交、推送并重新部署，**无需本机或人工参与**。
@@ -24,15 +28,19 @@
                     │
                     │ 推送触发自动部署
                     ▼
-              Netlify 站点
-          (frolicking-panda-50736e · 发布目录 web)
+        ┌───────────────────────────────┐
+        │  GitHub Pages（首选 · 无限构建） │
+        │  Netlify（备用 · 额度暂停中）    │
+        └───────────────────────────────┘
 ```
 
 - **GitHub Actions**（`.github/workflows/price-update.yml`）：美国机房 IP，直连 ZOL 偶有限流风险，
   脚本已做「重试 + 退避 + 防覆盖保护」，**互为兜底**。推 GitHub 用内置 `GITHUB_TOKEN`，推 Gitee 用 Secret `GITEE_TOKEN`。
 - **Gitee Go**（`.workflow/daily-price-update.yml`）：国内 IP，直连 ZOL 不受限，是**最稳的主力执行器**。
   抓取完整后提交并同步推回 GitHub。
-- **Netlify**：连接 GitHub 仓库后，**每次推送自动部署**站点。
+- **GitHub Pages（首选）**：仓库内置 `deploy-pages.yml`，`web/` 目录有变化（含每日 CI 更新的 `data.js`）即自动部署，
+  **无限构建、无角标**，现作为主访问地址。详见第八章。
+- **Netlify（备用）**：连接 GitHub 仓库后每次推送自动部署，但当前免费额度耗尽暂停（详见第六章 / 第八章）。
 
 ---
 
@@ -53,6 +61,7 @@
 5. 顺手关闭角标：**Site configuration → General → Powered by Netlify badge → 关闭**
 
 > 仅完成这一步，GitHub Actions 这条线即可实现「抓价 → 推 GitHub → Netlify 自动发布」最小闭环。
+> 若只使用 GitHub Pages（首选），可跳过本章第 1–5 步，改为按第八章启用 GitHub Pages 即可。
 
 ---
 
@@ -75,7 +84,7 @@
    | `GITHUB_USERNAME` | `tianxie1983`               | 你的 GitHub 用户名        |
    | `GITHUB_TOKEN`    | `<GitHub PAT>`              | 需 `contents:write` 权限  |
 
-3. 保存后 Gitee Go 每天 02:17 自动抓全 27 款 → 提交 → 推回 GitHub → Netlify 部署。
+3. 保存后 Gitee Go 每天 02:17 自动抓全 27 款 → 提交 → 推回 GitHub → 触发 GitHub Pages / Netlify 部署。
 
 ---
 
@@ -91,7 +100,9 @@
 
 ## 五、如何验证配置成功
 
-- **Netlify**：配置完成后，Deploy 列表是否出现新部署；或直接等次日 02:17，看站点日期是否更新。
+- **GitHub Pages（首选）**：仓库 → Actions → 「Deploy to GitHub Pages」出现绿色对勾后，访问
+  https://tianxie1983.github.io/tianxie/ 看日期是否更新。
+- **Netlify（备用）**：配置完成后，Deploy 列表是否出现新部署；或直接等次日 02:17，看站点日期是否更新。
 - **GitHub Actions**：仓库 → Actions → 「每日自动更新配件价格」→ 右上角 **Run workflow** 手动跑一次，
   查看是否成功提交并推送 Gitee。
 - **Gitee Go**：Gitee → 流水线 → 手动触发一次，查看日志中 27/27 抓取与双端推送是否成功。
@@ -102,11 +113,12 @@
 
 | 现象                         | 可能原因 / 处理                                               |
 |------------------------------|--------------------------------------------------------------|
-| 站点仍显示旧日期             | Netlify 未连接仓库（见第二章）；**或 Netlify 构建额度耗尽、生产构建被暂停**（Deploys 页会提示 "Production builds are paused"，等计费周期重置或改用第八章 GitHub Pages）；或当天价格无变化被跳过 |
+| 站点仍显示旧日期             | Netlify 未连接仓库（见第二章）；**或 Netlify 构建额度耗尽、生产构建被暂停**（Deploys 页会提示 "Production builds are paused"，改用首选的 GitHub Pages 即可）；或当天价格无变化被跳过 |
+| GitHub Pages 打不开 / 404    | 确认 Settings → Pages → Source 已选「GitHub Actions」，且 `web/` 目录有过一次推送触发部署 |
 | GitHub Actions 报 ZOL 限流   | 美国 IP 被限流属正常；脚本会自动跳过不写数据，次日 Gitee Go 兜底 |
 | Gitee 推送失败               | 检查 `GITEE_TOKEN` 是否有效、是否勾 `projects` 权限            |
 | GitHub 推送失败              | 检查 `GITHUB_TOKEN` 是否含 `contents:write`                   |
-| 角标还在                     | Netlify UI 关闭 badge（第二章第 5 步），比代码 CSP 更可靠     |
+| 角标还在                     | Netlify UI 关闭 badge（第二章第 5 步），比代码 CSP 更可靠；GitHub Pages 本身无角标 |
 
 ---
 
@@ -118,15 +130,19 @@
 - 抓取脚本：`scripts/price-fetch.js`（聚合）、`scripts/zol-fetch.js`（直连抓取，含抗限流）
 - 防覆盖保护：抓取成功率 < 0.5 时不写 `data.js`，保留上次完整数据
 - 发布目录：**`web`**
+- **首选访问地址**：https://tianxie1983.github.io/tianxie/ （GitHub Pages，每日自动更新）
 - 配置文件：**仓库根目录唯一一份 `netlify.toml`**（含 `publish="web"` 与关角标 CSP）；Netlify 的 Base directory 须为仓库根，**不要填 `web`**，否则会误读 `web/netlify.toml` 而绕过根配置
 
 ---
 
-## 八、备用托管：GitHub Pages（Netlify 额度耗尽时的双轨方案）
+## 八、主用托管：GitHub Pages（Netlify 额度耗尽时的双轨方案，现作为首选）
+
+> **当前首选访问地址**：https://tianxie1983.github.io/tianxie/ （数据每日自动更新，已上线）
 
 Netlify 免费计划每月构建额度有限，耗尽后生产构建被暂停、站点停止更新（提示 "Production builds are paused"）。
-本仓库已内置 GitHub Pages 部署工作流（`.github/workflows/deploy-pages.yml`）作为**双轨备份**：
-每次 `web/` 目录有变化（含每日 CI 更新的 `data.js`）即自动部署，**免费、构建次数无限、无角标**。
+本仓库已内置 GitHub Pages 部署工作流（`.github/workflows/deploy-pages.yml`）作为**双轨备份**，现因 Netlify 暂停而
+**成为首选主用地址**：每次 `web/` 目录有变化（含每日 CI 更新的 `data.js`）即自动部署，
+**免费、构建次数无限、无角标**。
 
 **启用步骤（一次性）**：
 1. GitHub 仓库 → **Settings → Pages**
@@ -136,5 +152,5 @@ Netlify 免费计划每月构建额度有限，耗尽后生产构建被暂停、
 4. 验证：仓库 → Actions → 「Deploy to GitHub Pages」出现绿色对勾后访问上述地址。
 
 > 说明：页面全部使用相对路径（`data.js` / `style.css` / `cover.png`），在 GitHub Pages 的 `/tianxie/` 子路径下可正常运行。
-> Netlify 额度重置后两条托管线并存互不影响；只想用其中一条时，停用另一个工作流或断开 Netlify 连接即可。
-  （过渡期：本仓库当前仍临时保留 `web/netlify.toml` 作角标兜底，待 Netlify 改回根目录部署确认无误后会被删除，最终仅剩根目录一份）
+> **当前状态**：Netlify 额度耗尽暂停，GitHub Pages 已上线并作为**首选访问地址**；两条托管线并存互不影响，Netlify 额度重置后可重新启用以分担流量。
+> （过渡期：本仓库当前仍临时保留 `web/netlify.toml` 作角标兜底，待 Netlify 改回根目录部署确认无误后会被删除，最终仅剩根目录一份）

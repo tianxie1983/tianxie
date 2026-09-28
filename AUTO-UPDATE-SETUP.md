@@ -102,7 +102,7 @@
 
 | 现象                         | 可能原因 / 处理                                               |
 |------------------------------|--------------------------------------------------------------|
-| 站点仍显示旧日期             | Netlify 未连接仓库（见第二章）；或当天价格无变化被跳过        |
+| 站点仍显示旧日期             | Netlify 未连接仓库（见第二章）；**或 Netlify 构建额度耗尽、生产构建被暂停**（Deploys 页会提示 "Production builds are paused"，等计费周期重置或改用第八章 GitHub Pages）；或当天价格无变化被跳过 |
 | GitHub Actions 报 ZOL 限流   | 美国 IP 被限流属正常；脚本会自动跳过不写数据，次日 Gitee Go 兜底 |
 | Gitee 推送失败               | 检查 `GITEE_TOKEN` 是否有效、是否勾 `projects` 权限            |
 | GitHub 推送失败              | 检查 `GITHUB_TOKEN` 是否含 `contents:write`                   |
@@ -119,4 +119,22 @@
 - 防覆盖保护：抓取成功率 < 0.5 时不写 `data.js`，保留上次完整数据
 - 发布目录：**`web`**
 - 配置文件：**仓库根目录唯一一份 `netlify.toml`**（含 `publish="web"` 与关角标 CSP）；Netlify 的 Base directory 须为仓库根，**不要填 `web`**，否则会误读 `web/netlify.toml` 而绕过根配置
+
+---
+
+## 八、备用托管：GitHub Pages（Netlify 额度耗尽时的双轨方案）
+
+Netlify 免费计划每月构建额度有限，耗尽后生产构建被暂停、站点停止更新（提示 "Production builds are paused"）。
+本仓库已内置 GitHub Pages 部署工作流（`.github/workflows/deploy-pages.yml`）作为**双轨备份**：
+每次 `web/` 目录有变化（含每日 CI 更新的 `data.js`）即自动部署，**免费、构建次数无限、无角标**。
+
+**启用步骤（一次性）**：
+1. GitHub 仓库 → **Settings → Pages**
+2. **Build and deployment → Source** 选择 **「GitHub Actions」**
+3. 完成。之后推送 `web/` 变更会自动部署，站点地址：
+   `https://tianxie1983.github.io/tianxie/`
+4. 验证：仓库 → Actions → 「Deploy to GitHub Pages」出现绿色对勾后访问上述地址。
+
+> 说明：页面全部使用相对路径（`data.js` / `style.css` / `cover.png`），在 GitHub Pages 的 `/tianxie/` 子路径下可正常运行。
+> Netlify 额度重置后两条托管线并存互不影响；只想用其中一条时，停用另一个工作流或断开 Netlify 连接即可。
   （过渡期：本仓库当前仍临时保留 `web/netlify.toml` 作角标兜底，待 Netlify 改回根目录部署确认无误后会被删除，最终仅剩根目录一份）

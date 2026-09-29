@@ -8,7 +8,12 @@ on:
   push:
     branches: [main]
     paths: ['web/**']
-  workflow_dispatch:
+  workflow_dispatch: {}
+  # 关键修复：price-update 用 GITHUB_TOKEN 推送的提交不会触发上面的 on.push（GitHub 防循环机制），
+  # 导致站点一直停在旧版本。改用 workflow_run：price-update 一跑完就自动触发本部署，无需人工干预。
+  workflow_run:
+    workflows: ["每日自动更新配件价格"]
+    types: [completed]
 
 permissions:
   contents: read

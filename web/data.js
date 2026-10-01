@@ -2065,7 +2065,7 @@ window.PC = (function () {
     "id": "psu-1200",
     "name": "全汉 1200W 白金",
     "brand": "FSP",
-    "price": 659,
+    "price": 599,
     "power": 0,
     "watt": 1200,
     "specs": [
@@ -2369,7 +2369,7 @@ window.PC = (function () {
   }
 ];
   const meta = {
-  "updatedAt": "2026-09-30T18:34:15.923Z",
+  "updatedAt": "2026-10-01T18:37:03.945Z",
   "source": "中关村在线(ZOL)公开参考价",
   "autoCount": 80,
   "manualCount": 8,

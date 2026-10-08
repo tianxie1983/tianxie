@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f2433" />
+  <title>装机大师 · 配件报价与智能装机</title>
+  <style>
+    :root {
+      --primary: #3a7afe;
+      --primary-dark: #2b5fe0;
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #1f2433;
+      --text-sub: #6b7280;
+      --price: #ff5a3c;
+      --ok: #18a058;
+      --warn: #f0a020;
+      --bad: #e54848;
+      --line: #eceef2;
+      --tab-h: 58px;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: #dfe2e8;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Helvetica, sans-serif;
+      font-size: 15px; line-height: 1.5;
+    }
+    #phone { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg); position: relative; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.12); }
+    #view { flex: 1; padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); }
+    button { font-family: inherit; }
+
+    .card { background: var(--card); border-radius: 14px; box-shadow: 0 2px 12px rgba(31,36,51,0.05); }
+    .price { color: var(--price); font-weight: 700; }
+    .price-symbol { font-size: 12px; }
+    .price-unit { font-size: 12px; color: var(--text-sub); font-weight: 400; }
+    .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; background: #eef3ff; color: var(--primary); margin-right: 6px; }
+    .tag.gray { background: #f0f1f4; color: var(--text-sub); }
+    .tag.ok { background: #e7f7ee; color: var(--ok); }
+    .tag.warn { background: #fdf3e3; color: var(--warn); }
+    .tag.bad { background: #fdecec; color: var(--bad); }
+    .tag.hot { background: #ffece6; color: var(--price); }
+    .section-title { font-size: 17px; font-weight: 800; margin: 18px 14px 8px; display: flex; align-items: center; }
+    .section-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); border-radius: 3px; margin-right: 8px; }
+    .hidden { display: none !important; }
+
+    .hero { margin: 14px; padding: 22px 18px; border-radius: 16px; background: linear-gradient(135deg, #3a7afe, #5b4bff); color: #fff; box-shadow: 0 8px 22px rgba(58,122,254,0.35); }
+    .hero-title { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
+    .hero-sub { font-size: 13px; opacity: .9; margin-top: 6px; }
+    .hero-cta { display: inline-block; margin-top: 14px; padding: 7px 18px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.4); border-radius: 999px; font-size: 14px; }
+
+    .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 14px; }
+    .cat-item { background: var(--card); border-radius: 12px; padding: 14px 4px; text-align: center; box-shadow: 0 2px 10px rgba(31,36,51,0.04); }
+    .cat-item:active { background: #eef3ff; }
+    .cat-icon { font-size: 26px; }
+    .cat-name { font-size: 12px; margin-top: 5px; }
+
+    .hot-list { padding: 0 14px; }
+    .hot { display: flex; align-items: center; padding: 13px 15px; margin-bottom: 9px; }
+    .hot-icon { font-size: 24px; margin-right: 11px; }
+    .hot-body { flex: 1; min-width: 0; }
+    .hot-name { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hot-cat { font-size: 11px; color: var(--text-sub); margin-top: 3px; }
+    .footer { text-align: center; color: #b3b8c2; font-size: 11px; margin: 18px 0; }
+
+    .sub-header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; padding: 12px 14px; background: #fff; border-bottom: 1px solid var(--line); }
+    .sub-back { font-size: 22px; margin-right: 10px; color: var(--text); }
+    .sub-title { font-size: 17px; font-weight: 800; }
+
+    .cat-head { display: flex; align-items: center; padding: 14px 8px 10px 18px; }
+    .cat-head-icon { font-size: 30px; margin-right: 11px; }
+    .cat-head-name { font-size: 19px; font-weight: 800; }
+    .cat-head-desc { font-size: 12px; color: var(--text-sub); margin-top: 3px; }
+    .part { display: flex; align-items: center; justify-content: space-between; padding: 14px 15px; margin: 0 14px 9px; }
+    .part-main { flex: 1; min-width: 0; }
+    .part-name { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .part-spec { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+    .part-brand { font-size: 11px; color: #aab0bb; margin-top: 3px; }
+    .part-side { text-align: right; margin-left: 11px; }
+    .add-btn { margin-top: 7px; padding: 5px 15px; background: #eef3ff; color: var(--primary); border-radius: 999px; font-size: 12px; font-weight: 600; display: inline-block; }
+    .add-btn.picked { background: var(--ok); color: #fff; }
+
+    .name-bar { display: flex; align-items: center; padding: 11px 15px; margin: 14px; }
+    .name-input { flex: 1; font-size: 16px; font-weight: 700; border: none; outline: none; background: transparent; }
+    .clear-link { color: var(--text-sub); font-size: 13px; margin-left: 11px; }
+    .rows .row { display: flex; align-items: center; padding: 13px 14px; margin: 0 14px 8px; }
+    .row-icon { font-size: 22px; margin-right: 11px; }
+    .row-main { flex: 1; min-width: 0; }
+    .row-cat { font-size: 11px; color: var(--text-sub); }
+    .row-part { font-size: 14px; font-weight: 600; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row-empty { font-size: 13px; color: var(--primary); margin-top: 3px; }
+    .row-right { text-align: right; margin-left: 9px; }
+    .row-del { font-size: 11px; color: var(--bad); margin-top: 5px; }
+
+    .issues { margin: 4px 18px 0; }
+    .issue { font-size: 12px; padding: 9px 12px; border-radius: 9px; margin-bottom: 7px; display: flex; align-items: center; }
+    .issue-dot { margin-right: 6px; font-size: 9px; }
+    .issue.bad { background: #fdecec; color: var(--bad); }
+    .issue.warn { background: #fdf3e3; color: var(--warn); }
+    .issue.ok { background: #e7f7ee; color: var(--ok); }
+
+    .summary { position: fixed; left: 0; right: 0; bottom: var(--tab-h); max-width: 480px; margin: 0 auto; display: flex; align-items: center; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -2px 12px rgba(0,0,0,0.06); }
+    .summary-info { flex: 1; }
+    .summary-total { font-size: 14px; }
+    .summary-total .price { font-size: 21px; }
+    .summary-sub { font-size: 11px; color: var(--text-sub); margin-top: 3px; }
+    .save-btn { margin: 0 0 0 11px; padding: 0 22px; line-height: 44px; border: none; border-radius: 999px; background: var(--primary); color: #fff; font-size: 14px; font-weight: 600; }
+
+    .build-card { padding: 15px 16px; margin: 0 14px 11px; }
+    .build-head { display: flex; align-items: baseline; justify-content: space-between; }
+    .build-name { font-size: 16px; font-weight: 800; }
+    .build-head .price { font-size: 20px; }
+    .build-time { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
+    .build-parts { margin-top: 11px; border-top: 1px solid var(--line); padding-top: 9px; }
+    .bp { display: flex; align-items: center; padding: 4px 0; font-size: 13px; }
+    .bp-icon { margin-right: 7px; }
+    .bp-cat { width: 56px; color: var(--text-sub); flex-shrink: 0; }
+    .bp-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .build-actions { display: flex; gap: 10px; margin-top: 12px; }
+    .ba { flex: 1; text-align: center; padding: 9px 0; border-radius: 999px; font-size: 14px; font-weight: 600; }
+    .ba.ghost { background: #eef1f6; color: var(--text); }
+    .ba.danger { background: #fdecec; color: var(--bad); }
+    .empty { text-align: center; color: var(--text-sub); padding: 90px 20px; font-size: 14px; }
+    .empty-cta { margin-top: 13px; color: var(--primary); font-weight: 600; font-size: 15px; }
+
+    .toast { position: fixed; left: 50%; top: 42%; transform: translateX(-50%); background: rgba(0,0,0,.82); color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 14px; z-index: 99; }
+
+    .data-bar { margin: 10px 12px 0; padding: 9px 12px; background: #eef3ff; border: 1px solid #d8e3ff; border-radius: 10px; font-size: 11.5px; color: #3a5bbf; line-height: 1.5; }
+
+    #tabbar { position: fixed; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto; height: calc(var(--tab-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); display: flex; background: #fff; border-top: 1px solid var(--line); z-index: 20; }
+    .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #9aa0ab; font-size: 11px; gap: 2px; }
+    .tab .tab-ico { font-size: 20px; }
+    .tab.active { color: var(--primary); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div id="phone">
+    <main id="view"></main>
+    <nav id="tabbar">
+      <div class="tab active" data-tab="home"><span class="tab-ico">🏠</span><span class="tab-tx">首页</span></div>
+      <div class="tab" data-tab="build"><span class="tab-ico">🛠️</span><span class="tab-tx">装机单</span></div>
+      <div class="tab" data-tab="mine"><span class="tab-ico">📁</span><span class="tab-tx">我的配置</span></div>
+    </nav>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script>// 本文件由 scripts/price-fetch.js 自动生成（复用 data/parts.js 与 utils/format.js）
+window.PC = (function () {
+  const categories = [
+  {
+    "key": "cpu",
+    "name": "处理器",
+    "icon": "🧠",
+    "desc": "CPU 中央处理器"
+  },
+  {
+    "key": "motherboard",
+    "name": "主板",
+    "icon": "🔲",
+    "desc": "Motherboard 主机板"
+  },
+  {
+    "key": "gpu",
+    "name": "显卡",
+    "icon": "🎮",
+    "desc": "GPU 图形显卡"
+  },
+  {
+    "key": "memory",
+    "name": "内存",
+    "icon": "📊",
+    "desc": "Memory 运行内存"
+  },
+  {
+    "key": "ssd",
+    "name": "固态硬盘",
+    "icon": "💾",
+    "desc": "SSD 存储"
+  },
+  {
+    "key": "cooler",
+    "name": "散热器",
+    "icon": "❄️",
+    "desc": "CPU Cooler"
+  },
+  {
+    "key": "psu",
+    "name": "电源",
+    "icon": "🔌",
+    "desc": "Power Supply"
+  },
+  {
+    "key": "chassis",
+    "name": "机箱",
+    "icon": "📦",
+    "desc": "Computer Case"
+  }
+];
+  const parts = [
+  {
+    "category": "cpu",
+    "id": "cpu-i5-14600kf",
+    "name": "Intel 酷睿 i5-14600KF",
+    "brand": "Intel",
+    "price": 2049,
+    "power": 181,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "14核20线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.3GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-i7-14700kf",
+    "name": "Intel 酷睿 i7-14700KF",
+    "brand": "Intel",
+    "price": 3299,
+    "power": 253,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "20核28线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.6GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/cpu/index1929613.shtml"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-i9-14900kf",
+    "name": "Intel 酷睿 i9-14900KF",
+    "brand": "Intel",
+    "price": 4999,
+    "power": 253,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "24核32线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "6.0GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/cpu/index1805095.shtml"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r5-7500f",
+    "name": "AMD 锐龙 R5 7500F",
+    "brand": "AMD",
+    "price": 1099,
+    "power": 65,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "6核12线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.0GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r7-7800x3d",
+    "name": "AMD 锐龙 R7 7800X3D",
+    "brand": "AMD",
+    "price": 3099,
+    "power": 120,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "8核16线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.0GHz"
+      },
+      {
+        "label": "3D缓存",
+        "value": "96MB"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/cpu/index1440585.shtml"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r9-7950x",
+    "name": "AMD 锐龙 R9 7950X",
+    "brand": "AMD",
+    "price": 5499,
+    "power": 170,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "16核32线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.7GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/cpu/index1424741.shtml"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-i5-14400f",
+    "name": "Intel 酷睿 i5-14400F",
+    "brand": "Intel",
+    "price": 999,
+    "power": 65,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "10核16线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "4.7GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-i5-13600kf",
+    "name": "Intel 酷睿 i5-13600KF",
+    "brand": "Intel",
+    "price": 2600,
+    "power": 181,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "14核20线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.1GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/cpu/index1429351.shtml"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-i5-14600k",
+    "name": "Intel 酷睿 i5-14600K",
+    "brand": "Intel",
+    "price": 2199,
+    "power": 181,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "14核20线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.3GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r5-7600",
+    "name": "AMD 锐龙 R5 7600",
+    "brand": "AMD",
+    "price": 1399,
+    "power": 65,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "6核12线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.1GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r5-7600x",
+    "name": "AMD 锐龙 R5 7600X",
+    "brand": "AMD",
+    "price": 1499,
+    "power": 105,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "6核12线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.3GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r7-7700",
+    "name": "AMD 锐龙 R7 7700",
+    "brand": "AMD",
+    "price": 2099,
+    "power": 65,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "8核16线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.3GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r7-9700x",
+    "name": "AMD 锐龙 R7 9700X",
+    "brand": "AMD",
+    "price": 2849,
+    "power": 65,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "8核16线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.5GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/cpu/index2018966.shtml"
+  },
+  {
+    "category": "cpu",
+    "id": "cpu-r9-9900x",
+    "name": "AMD 锐龙 R9 9900X",
+    "brand": "AMD",
+    "price": 4299,
+    "power": 120,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "核心/线程",
+        "value": "12核24线程"
+      },
+      {
+        "label": "加速频率",
+        "value": "5.6GHz"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存支持",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-b760m",
+    "name": "微星 PRO B760M-A DDR5",
+    "brand": "MSI",
+    "price": 949,
+    "power": 35,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "Intel B760"
+      },
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index2103759.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-z790a",
+    "name": "华硕 ROG STRIX Z790-A",
+    "brand": "ASUS",
+    "price": 2699,
+    "power": 45,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "Intel Z790"
+      },
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index1465548.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-b650m",
+    "name": "技嘉 B650M 小雕",
+    "brand": "Gigabyte",
+    "price": 999,
+    "power": 35,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "AMD B650"
+      },
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index2071207.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-x670e",
+    "name": "微星 MPG X670E",
+    "brand": "MSI",
+    "price": 2499,
+    "power": 45,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "AMD X670E"
+      },
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-h610m",
+    "name": "微星 PRO H610M DDR5",
+    "brand": "MSI",
+    "price": 599,
+    "power": 30,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "Intel H610"
+      },
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index1544325.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-b760m-tuf",
+    "name": "华硕 TUF B760M",
+    "brand": "ASUS",
+    "price": 949,
+    "power": 35,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "Intel B760"
+      },
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index2103759.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-z790-ud",
+    "name": "技嘉 Z790 UD",
+    "brand": "Gigabyte",
+    "price": 2699,
+    "power": 45,
+    "socket": "LGA1700",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "Intel Z790"
+      },
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "LGA1700"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index1465548.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-b650-tuf",
+    "name": "华硕 TUF GAMING B650",
+    "brand": "ASUS",
+    "price": 1299,
+    "power": 35,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "AMD B650"
+      },
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-b650m-mortar",
+    "name": "微星 B650M 迫击炮",
+    "brand": "MSI",
+    "price": 999,
+    "power": 35,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "AMD B650"
+      },
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/motherboard/index2071207.shtml"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-x670e-flag",
+    "name": "华硕 ROG X670E 旗舰",
+    "brand": "ASUS",
+    "price": 3299,
+    "power": 45,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "AMD X670E"
+      },
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "motherboard",
+    "id": "mb-a620m",
+    "name": "技嘉 A620M",
+    "brand": "Gigabyte",
+    "price": 799,
+    "power": 30,
+    "socket": "AM5",
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "芯片组",
+        "value": "AMD A620"
+      },
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "插槽",
+        "value": "AM5"
+      },
+      {
+        "label": "内存",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-igpu",
+    "name": "核显（使用处理器集成显卡）",
+    "brand": "集成",
+    "price": 0,
+    "power": 0,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "集成显卡"
+      },
+      {
+        "label": "适用",
+        "value": "办公/轻度娱乐"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4060",
+    "name": "影驰 RTX 4060 金属大师",
+    "brand": "GALAX",
+    "price": 2499,
+    "power": 115,
+    "hot": true,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "8GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "115W"
+      },
+      {
+        "label": "定位",
+        "value": "1080P 游戏"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/vga/index1794057.shtml"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4070s",
+    "name": "七彩虹 RTX 4070 SUPER",
+    "brand": "Colorful",
+    "price": 4799,
+    "power": 220,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "12GB GDDR6X"
+      },
+      {
+        "label": "功耗",
+        "value": "220W"
+      },
+      {
+        "label": "定位",
+        "value": "2K 游戏"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4080s",
+    "name": "微星 RTX 4080 SUPER",
+    "brand": "MSI",
+    "price": 8499,
+    "power": 320,
+    "hot": true,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "16GB GDDR6X"
+      },
+      {
+        "label": "功耗",
+        "value": "320W"
+      },
+      {
+        "label": "定位",
+        "value": "4K 游戏"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4090",
+    "name": "华硕 RTX 4090 ROG",
+    "brand": "ASUS",
+    "price": 23999,
+    "power": 450,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "24GB GDDR6X"
+      },
+      {
+        "label": "功耗",
+        "value": "450W"
+      },
+      {
+        "label": "定位",
+        "value": "旗舰 4K/创作"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/vga/index2126436.shtml"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-7800xt",
+    "name": "蓝宝石 RX 7800 XT",
+    "brand": "SAPPHIRE",
+    "price": 3999,
+    "power": 263,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "16GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "263W"
+      },
+      {
+        "label": "定位",
+        "value": "2K 高刷"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4060ti",
+    "name": "影驰 RTX 4060 Ti 8G",
+    "brand": "GALAX",
+    "price": 2999,
+    "power": 165,
+    "hot": true,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "8GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "165W"
+      },
+      {
+        "label": "定位",
+        "value": "1080P/2K"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4070",
+    "name": "七彩虹 RTX 4070",
+    "brand": "Colorful",
+    "price": 4299,
+    "power": 200,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "12GB GDDR6X"
+      },
+      {
+        "label": "功耗",
+        "value": "200W"
+      },
+      {
+        "label": "定位",
+        "value": "2K 游戏"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4070tis",
+    "name": "微星 RTX 4070 Ti SUPER",
+    "brand": "MSI",
+    "price": 6499,
+    "power": 285,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "16GB GDDR6X"
+      },
+      {
+        "label": "功耗",
+        "value": "285W"
+      },
+      {
+        "label": "定位",
+        "value": "2K/4K"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-4080",
+    "name": "影驰 RTX 4080",
+    "brand": "GALAX",
+    "price": 9499,
+    "power": 320,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "16GB GDDR6X"
+      },
+      {
+        "label": "功耗",
+        "value": "320W"
+      },
+      {
+        "label": "定位",
+        "value": "4K 游戏"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-rx7600",
+    "name": "蓝宝石 RX 7600",
+    "brand": "SAPPHIRE",
+    "price": 2099,
+    "power": 165,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "8GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "165W"
+      },
+      {
+        "label": "定位",
+        "value": "1080P"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-rx7700xt",
+    "name": "撼讯 RX 7700 XT",
+    "brand": "PowerColor",
+    "price": 3499,
+    "power": 245,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "12GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "245W"
+      },
+      {
+        "label": "定位",
+        "value": "2K 高刷"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-rx7900xt",
+    "name": "蓝宝石 RX 7900 XT",
+    "brand": "SAPPHIRE",
+    "price": 5999,
+    "power": 315,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "20GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "315W"
+      },
+      {
+        "label": "定位",
+        "value": "4K 游戏"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-rx7900xtx",
+    "name": "蓝宝石 RX 7900 XTX",
+    "brand": "SAPPHIRE",
+    "price": 7999,
+    "power": 355,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "24GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "355W"
+      },
+      {
+        "label": "定位",
+        "value": "旗舰 4K"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-arc770",
+    "name": "英特尔 Arc A770 16G",
+    "brand": "Intel",
+    "price": 2499,
+    "power": 225,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "16GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "225W"
+      },
+      {
+        "label": "定位",
+        "value": "创作/剪辑"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "gpu",
+    "id": "gpu-rx9070xt",
+    "name": "撼讯 RX 9070 XT",
+    "brand": "PowerColor",
+    "price": 5799,
+    "power": 304,
+    "hot": true,
+    "specs": [
+      {
+        "label": "显存",
+        "value": "16GB GDDR6"
+      },
+      {
+        "label": "功耗",
+        "value": "304W"
+      },
+      {
+        "label": "定位",
+        "value": "2K/4K"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/vga/index2141540.shtml"
+  },
+  {
+    "category": "memory",
+    "id": "mem-16g-6000",
+    "name": "金士顿 FURY 16G DDR5 6000",
+    "brand": "Kingston",
+    "price": 479,
+    "power": 8,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "16GB (8G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6000MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/memory/index1948453.shtml"
+  },
+  {
+    "category": "memory",
+    "id": "mem-32g-6000",
+    "name": "芝奇 焰光戟 32G DDR5 6000",
+    "brand": "G.SKILL",
+    "price": 699,
+    "power": 10,
+    "memType": "DDR5",
+    "hot": true,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "32GB (16G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6000MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "memory",
+    "id": "mem-32g-6400",
+    "name": "英睿达 32G DDR5 6400",
+    "brand": "Crucial",
+    "price": 799,
+    "power": 10,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "32GB (16G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6400MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/memory/index1955978.shtml"
+  },
+  {
+    "category": "memory",
+    "id": "mem-16g-6800",
+    "name": "金百达 16G DDR5 6800",
+    "brand": "KINGBANK",
+    "price": 329,
+    "power": 8,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "16GB (8G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6800MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "memory",
+    "id": "mem-32g-6000k",
+    "name": "金士顿 FURY 32G DDR5 6000",
+    "brand": "Kingston",
+    "price": 699,
+    "power": 10,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "32GB (16G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6000MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "memory",
+    "id": "mem-16g-6000g",
+    "name": "芝奇 焰光戟 16G DDR5 6000",
+    "brand": "G.SKILL",
+    "price": 479,
+    "power": 8,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "16GB (8G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6000MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/memory/index1948453.shtml"
+  },
+  {
+    "category": "memory",
+    "id": "mem-16g-5600c",
+    "name": "英睿达 16G DDR5 5600",
+    "brand": "Crucial",
+    "price": 299,
+    "power": 8,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "16GB (8G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "5600MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "memory",
+    "id": "mem-32g-6400g",
+    "name": "光威 32G DDR5 6400",
+    "brand": "Gloway",
+    "price": 799,
+    "power": 10,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "32GB (16G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6400MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/memory/index1955978.shtml"
+  },
+  {
+    "category": "memory",
+    "id": "mem-32g-6800a",
+    "name": "阿斯加特 32G DDR5 6800",
+    "brand": "Asgard",
+    "price": 659,
+    "power": 10,
+    "memType": "DDR5",
+    "specs": [
+      {
+        "label": "容量",
+        "value": "32GB (16G×2)"
+      },
+      {
+        "label": "频率",
+        "value": "6800MHz"
+      },
+      {
+        "label": "类型",
+        "value": "DDR5"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-1t-tiplus",
+    "name": "致态 TiPlus7100 1TB",
+    "brand": "ZhiTai",
+    "price": 459,
+    "power": 7,
+    "hot": true,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "1TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "7100MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-1t-980pro",
+    "name": "三星 980 PRO 1TB",
+    "brand": "SAMSUNG",
+    "price": 699,
+    "power": 8,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "1TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "7000MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-2t-sn850x",
+    "name": "西数 SN850X 2TB",
+    "brand": "WD",
+    "price": 1099,
+    "power": 9,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "2TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "7300MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-2t-ti600",
+    "name": "致态 Ti600 2TB",
+    "brand": "ZhiTai",
+    "price": 799,
+    "power": 8,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "2TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "7000MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-1t-se10",
+    "name": "铠侠 SE10 1TB",
+    "brand": "Kioxia",
+    "price": 549,
+    "power": 8,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "1TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "7300MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-1t-ti5000",
+    "name": "致态 TiPlus5000 1TB",
+    "brand": "ZhiTai",
+    "price": 369,
+    "power": 6,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "1TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 3.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "3500MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-2t-990pro",
+    "name": "三星 990 PRO 2TB",
+    "brand": "SAMSUNG",
+    "price": 1299,
+    "power": 9,
+    "hot": true,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "2TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "7450MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-1t-p3plus",
+    "name": "英睿达 P3 Plus 1TB",
+    "brand": "Crucial",
+    "price": 399,
+    "power": 6,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "1TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "5000MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "ssd",
+    "id": "ssd-1t-sn770",
+    "name": "西数 SN770 1TB",
+    "brand": "WD",
+    "price": 469,
+    "power": 7,
+    "specs": [
+      {
+        "label": "容量",
+        "value": "1TB"
+      },
+      {
+        "label": "接口",
+        "value": "PCIe 4.0 NVMe"
+      },
+      {
+        "label": "读取",
+        "value": "5150MB/s"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-ax120",
+    "name": "利民 AX120 R SE 风冷",
+    "brand": "Thermalright",
+    "price": 89,
+    "power": 3,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "单塔风冷"
+      },
+      {
+        "label": "高度",
+        "value": "155mm"
+      },
+      {
+        "label": "适用",
+        "value": "≤150W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-ak620",
+    "name": "九州风神 AK620 双塔",
+    "brand": "DEEPCOOL",
+    "price": 239,
+    "power": 5,
+    "hot": true,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "双塔风冷"
+      },
+      {
+        "label": "高度",
+        "value": "160mm"
+      },
+      {
+        "label": "适用",
+        "value": "≤260W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-frozen360",
+    "name": "利民 Frozen 360 水冷",
+    "brand": "Thermalright",
+    "price": 499,
+    "power": 7,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "360 一体水冷"
+      },
+      {
+        "label": "适用",
+        "value": "≤300W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-kraken360",
+    "name": "恩杰 Kraken 360 水冷",
+    "brand": "NZXT",
+    "price": 999,
+    "power": 8,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "360 一体水冷"
+      },
+      {
+        "label": "屏幕",
+        "value": "2.36\" LCD"
+      },
+      {
+        "label": "适用",
+        "value": "≤300W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-pa120",
+    "name": "利民 PA120 双塔",
+    "brand": "Thermalright",
+    "price": 139,
+    "power": 4,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "双塔风冷"
+      },
+      {
+        "label": "高度",
+        "value": "155mm"
+      },
+      {
+        "label": "适用",
+        "value": "≤220W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-ag400",
+    "name": "九州风神 AG400",
+    "brand": "DEEPCOOL",
+    "price": 89,
+    "power": 3,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "单塔风冷"
+      },
+      {
+        "label": "高度",
+        "value": "150mm"
+      },
+      {
+        "label": "适用",
+        "value": "≤220W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-r4000",
+    "name": "超频三 东海 R4000",
+    "brand": "PCCOOLER",
+    "price": 119,
+    "power": 4,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "四热管风冷"
+      },
+      {
+        "label": "高度",
+        "value": "155mm"
+      },
+      {
+        "label": "适用",
+        "value": "≤200W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-kraken240",
+    "name": "恩杰 Kraken 240 水冷",
+    "brand": "NZXT",
+    "price": 699,
+    "power": 6,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "240 一体水冷"
+      },
+      {
+        "label": "适用",
+        "value": "≤250W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-mag360",
+    "name": "微星 MAG 360 水冷",
+    "brand": "MSI",
+    "price": 599,
+    "power": 7,
+    "hot": true,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "360 一体水冷"
+      },
+      {
+        "label": "适用",
+        "value": "≤300W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "cooler",
+    "id": "cooler-cr1000",
+    "name": "乔思伯 CR-1000 风冷",
+    "brand": "JONSBO",
+    "price": 69,
+    "power": 3,
+    "specs": [
+      {
+        "label": "类型",
+        "value": "单塔风冷"
+      },
+      {
+        "label": "高度",
+        "value": "158mm"
+      },
+      {
+        "label": "适用",
+        "value": "≤150W"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "psu",
+    "id": "psu-650",
+    "name": "长城 650W 金牌",
+    "brand": "GreatWall",
+    "price": 475,
+    "power": 0,
+    "watt": 650,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "650W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 金牌"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/power/index1289953.shtml"
+  },
+  {
+    "category": "psu",
+    "id": "psu-750",
+    "name": "酷冷至尊 750W 金牌",
+    "brand": "CoolerMaster",
+    "price": 699,
+    "power": 0,
+    "watt": 750,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "750W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 金牌"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/power/index1342457.shtml"
+  },
+  {
+    "category": "psu",
+    "id": "psu-850",
+    "name": "振华 LEADEX 850W 金牌",
+    "brand": "SuperFlower",
+    "price": 1079,
+    "power": 0,
+    "watt": 850,
+    "hot": true,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "850W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 金牌"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/power/index1379628.shtml"
+  },
+  {
+    "category": "psu",
+    "id": "psu-1000",
+    "name": "海韵 FOCUS 1000W 白金",
+    "brand": "Seasonic",
+    "price": 899,
+    "power": 0,
+    "watt": 1000,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "1000W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 白金"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/power/index299190.shtml"
+  },
+  {
+    "category": "psu",
+    "id": "psu-550",
+    "name": "振华 550W 铜牌",
+    "brand": "SuperFlower",
+    "price": 299,
+    "power": 0,
+    "watt": 550,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "550W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 铜牌"
+      },
+      {
+        "label": "模组",
+        "value": "非模组"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "psu",
+    "id": "psu-750a",
+    "name": "安钛克 750W 金牌",
+    "brand": "Antec",
+    "price": 699,
+    "power": 0,
+    "watt": 750,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "750W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 金牌"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/power/index1342457.shtml"
+  },
+  {
+    "category": "psu",
+    "id": "psu-850rm",
+    "name": "海盗船 RM850e 金牌",
+    "brand": "Corsair",
+    "price": 699,
+    "power": 0,
+    "watt": 850,
+    "hot": true,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "850W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 金牌"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "psu",
+    "id": "psu-1000a",
+    "name": "微星 A1000G 金牌",
+    "brand": "MSI",
+    "price": 1099,
+    "power": 0,
+    "watt": 1000,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "1000W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 金牌"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "psu",
+    "id": "psu-1200",
+    "name": "全汉 1200W 白金",
+    "brand": "FSP",
+    "price": 1499,
+    "power": 0,
+    "watt": 1200,
+    "specs": [
+      {
+        "label": "额定",
+        "value": "1200W"
+      },
+      {
+        "label": "认证",
+        "value": "80PLUS 白金"
+      },
+      {
+        "label": "模组",
+        "value": "全模组"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-m2",
+    "name": "先马 平头哥 M2",
+    "brand": "SAMA",
+    "price": 159,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "材质",
+        "value": "钢化玻璃侧透"
+      },
+      {
+        "label": "风冷限高",
+        "value": "165mm"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/case/index1980292.shtml"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-d31",
+    "name": "乔思伯 D31 网孔版",
+    "brand": "JONSBO",
+    "price": 399,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "屏幕位",
+        "value": "可选副屏"
+      },
+      {
+        "label": "风冷限高",
+        "value": "168mm"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-623",
+    "name": "追风者 623",
+    "brand": "Phanteks",
+    "price": 499,
+    "power": 5,
+    "hot": true,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "材质",
+        "value": "钢化玻璃侧透"
+      },
+      {
+        "label": "水冷支持",
+        "value": "360 冷排"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-o11",
+    "name": "联力 包豪斯 O11",
+    "brand": "LianLi",
+    "price": 699,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "材质",
+        "value": "双面钢化玻璃"
+      },
+      {
+        "label": "水冷支持",
+        "value": "360 冷排"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-luban1",
+    "name": "先马 鲁班1",
+    "brand": "SAMA",
+    "price": 299,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "材质",
+        "value": "钢化玻璃侧透"
+      },
+      {
+        "label": "水冷支持",
+        "value": "360 冷排"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-yogo",
+    "name": "爱国者 YOGO M2",
+    "brand": "aigo",
+    "price": 159,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "材质",
+        "value": "网孔面板"
+      },
+      {
+        "label": "风冷限高",
+        "value": "168mm"
+      }
+    ],
+    "priceSource": "zol",
+    "url": "https://detail.zol.com.cn/case/index1980292.shtml"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-nr400",
+    "name": "酷冷 NR400",
+    "brand": "CoolerMaster",
+    "price": 329,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "M-ATX"
+      },
+      {
+        "label": "材质",
+        "value": "侧透"
+      },
+      {
+        "label": "风冷限高",
+        "value": "167mm"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-207",
+    "name": "联力 鬼斧207",
+    "brand": "LianLi",
+    "price": 499,
+    "power": 5,
+    "hot": true,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "材质",
+        "value": "双仓设计"
+      },
+      {
+        "label": "水冷支持",
+        "value": "360 冷排"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-p20c",
+    "name": "安钛克 P20C",
+    "brand": "Antec",
+    "price": 399,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "材质",
+        "value": "网孔面板"
+      },
+      {
+        "label": "水冷支持",
+        "value": "360 冷排"
+      }
+    ],
+    "priceSource": "manual"
+  },
+  {
+    "category": "chassis",
+    "id": "chassis-xt523",
+    "name": "追风者 XT523",
+    "brand": "Phanteks",
+    "price": 459,
+    "power": 5,
+    "specs": [
+      {
+        "label": "板型",
+        "value": "ATX"
+      },
+      {
+        "label": "材质",
+        "value": "钢化玻璃侧透"
+      },
+      {
+        "label": "水冷支持",
+        "value": "360 冷排"
+      }
+    ],
+    "priceSource": "manual"
+  }
+];
+  const presets = [
+  {
+    "id": "p-budget",
+    "name": "办公入门",
+    "desc": "核显办公，性价比之选",
+    "cpu": "cpu-r5-7500f",
+    "motherboard": "mb-b650m",
+    "gpu": "gpu-igpu",
+    "memory": "mem-16g-6000",
+    "ssd": "ssd-1t-tiplus",
+    "cooler": "cooler-ax120",
+    "psu": "psu-650",
+    "chassis": "chassis-m2"
+  },
+  {
+    "id": "p-game",
+    "name": "2K 游戏",
+    "desc": "高帧率 2K 游戏主机",
+    "cpu": "cpu-r7-7800x3d",
+    "motherboard": "mb-b650m",
+    "gpu": "gpu-4070s",
+    "memory": "mem-32g-6000",
+    "ssd": "ssd-2t-ti600",
+    "cooler": "cooler-ak620",
+    "psu": "psu-850",
+    "chassis": "chassis-623"
+  },
+  {
+    "id": "p-flag",
+    "name": "旗舰 4K",
+    "desc": "顶级 4K 发烧配置",
+    "cpu": "cpu-i9-14900kf",
+    "motherboard": "mb-z790a",
+    "gpu": "gpu-4090",
+    "memory": "mem-32g-6400",
+    "ssd": "ssd-2t-sn850x",
+    "cooler": "cooler-frozen360",
+    "psu": "psu-1000",
+    "chassis": "chassis-o11"
+  }
+];
+  const meta = {
+  "updatedAt": "2026-09-28T18:33:48.607Z",
+  "source": "中关村在线(ZOL)公开参考价",
+  "autoCount": 27,
+  "manualCount": 61,
+  "total": 88,
+  "note": "价格随行情波动，仅供参考；未匹配到公开报价的配件保留原价。"
+};
+
+  function categoryOf(key) { return categories.find(c => c.key === key); }
+  function partsOfCategory(key) { return parts.filter(p => p.category === key); }
+  function partById(id) { return parts.find(p => p.id === id); }
+
+  function formatMoney(n) {
+  const num = Number(n) || 0;
+  return num.toLocaleString('en-US');
+}
+  function roundWatt(w) {
+  return Math.ceil(w / 50) * 50;
+}
+  function evaluateBuild(selection) {
+  const items = {};
+  let total = 0;
+  let totalPower = 0;
+
+  categories.forEach(cat => {
+    const id = selection[cat.key];
+    if (id) {
+      const part = partById(id);
+      if (part) {
+        items[cat.key] = part;
+        total += part.price || 0;
+        totalPower += part.power || 0;
+      }
+    }
+  });
+
+  // 基础功耗：风扇/外设/余量
+  totalPower += 30;
+
+  const recommendedPsu = roundWatt(totalPower * 1.3);
+
+  const issues = [];
+  const cpu = items.cpu;
+  const mb = items.motherboard;
+  const mem = items.memory;
+  const psu = items.psu;
+
+  if (cpu && mb && cpu.socket && mb.socket && cpu.socket !== mb.socket) {
+    issues.push({ level: 'bad', text: `处理器（${cpu.socket}）与主板（${mb.socket}）插槽不匹配` });
+  }
+  if (mb && mem && mb.memType && mem.memType && mb.memType !== mem.memType) {
+    issues.push({ level: 'bad', text: `主板（${mb.memType}）与内存（${mem.memType}）类型不匹配` });
+  }
+  if (psu && psu.watt) {
+    if (psu.watt < totalPower * 1.15) {
+      issues.push({ level: 'bad', text: `电源 ${psu.watt}W 不足，建议 ≥ ${recommendedPsu}W（估算功耗 ${totalPower}W）` });
+    } else if (psu.watt < recommendedPsu) {
+      issues.push({ level: 'warn', text: `电源余量偏小，建议 ≥ ${recommendedPsu}W（估算功耗 ${totalPower}W）` });
+    } else {
+      issues.push({ level: 'ok', text: `电源 ${psu.watt}W 满足需求（估算功耗 ${totalPower}W）` });
+    }
+  }
+
+  const complete = categories.every(cat => items[cat.key]);
+
+  return { items, total, totalPower, recommendedPsu, complete, issues };
+}
+
+  return { categories, parts, presets, meta, categoryOf, partsOfCategory, partById, formatMoney, roundWatt, evaluateBuild };
+})();
+</script>
+  <script>
+  // 装机大师独立副本（内联真实数据，互不干扰）
+  var D = window.PC;
+  var build = {};
+  var builds = loadBuilds();
+  var STORE_KEY = "zjds_pc_builds";
+
+  function $(sel) { return document.querySelector(sel); }
+  function catName(key) {
+    var c = (D.categories || []).filter(function (x) { return x.key === key; })[0];
+    return c ? c.name : key;
+  }
+  function catIcon(key) {
+    var c = (D.categories || []).filter(function (x) { return x.key === key; })[0];
+    return c ? c.icon : "🧩";
+  }
+  function fmt(n) { return "¥" + Number(n || 0).toLocaleString("zh-CN"); }
+  function specText(p) {
+    if (p && p.specs && p.specs.length) {
+      return p.specs.slice(0, 2).map(function (s) { return s.value; }).join(" · ");
+    }
+    return [p && p.socket, p && p.memType].filter(Boolean).join(" · ");
+  }
+  function toast(msg) {
+    var t = $("#toast"); t.textContent = msg; t.classList.remove("hidden");
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.add("hidden"); }, 1400);
+  }
+  function partsOf(key) { return (D.parts || []).filter(function (p) { return p.category === key; }); }
+
+  function renderHome() {
+    var m = D.meta || {};
+    var html = "";
+    html += '<div class="hero"><div class="hero-title">装机大师</div>'
+      + '<div class="hero-sub">配件报价与智能装机 · 全品类实时参考价</div>'
+      + '<div class="hero-cta">👇 选择分类开始配置</div></div>';
+    html += '<div class="section-title">配件分类</div><div class="cat-grid">';
+    (D.categories || []).forEach(function (c) {
+      html += '<div class="cat-item" data-cat="' + c.key + '"><div class="cat-icon">' + c.icon + '</div>'
+        + '<div class="cat-name">' + c.name + '</div></div>';
+    });
+    html += '</div>';
+    var hots = (D.parts || []).filter(function (p) { return p.hot; }).slice(0, 8);
+    if (hots.length) {
+      html += '<div class="section-title">热门推荐</div><div class="hot-list">';
+      hots.forEach(function (p, i) {
+        html += '<div class="hot card"><div class="hot-icon">' + catIcon(p.category) + '</div>'
+          + '<div class="hot-body"><div class="hot-name">' + p.name + '</div>'
+          + '<div class="hot-cat">' + (p.brand || "") + ' · ' + fmt(p.price) + '</div></div></div>';
+      });
+      html += '</div>';
+    }
+    var src = m.source || "中关村在线(ZOL)公开参考价";
+    html += '<div class="data-bar">数据更新于 ' + (m.updatedAt || "") + ' · 来源 ' + src
+      + ' · 自动 ' + (m.autoCount || 0) + ' / 手动 ' + (m.manualCount || 0) + '（共 ' + ((D.parts || []).length) + ' 件）</div>';
+    html += '<div class="footer">装机大师 · 配件报价与智能装机</div>';
+    $("#view").innerHTML = html;
+    $("#view").querySelectorAll(".cat-item").forEach(function (el) {
+      el.addEventListener("click", function () { renderCategory(el.getAttribute("data-cat")); });
+    });
+  }
+
+  function renderCategory(key) {
+    var list = partsOf(key);
+    var c = (D.categories || []).filter(function (x) { return x.key === key; })[0];
+    var html = '<div class="sub-header"><span class="sub-back" data-back="1">‹</span>'
+      + '<span class="sub-title">' + c.name + '</span></div>';
+    html += '<div class="cat-head"><div class="cat-head-icon">' + c.icon + '</div>'
+      + '<div><div class="cat-head-name">' + c.name + '</div>'
+      + '<div class="cat-head-desc">' + (c.desc || "") + ' · 共 ' + list.length + ' 件</div></div></div>';
+    list.forEach(function (p, i) {
+      var picked = build[key] && build[key].id === p.id;
+      var hotTag = p.hot ? '<span class="tag hot">热门</span>' : '';
+      html += '<div class="part card"><div class="part-main">'
+        + '<div class="part-name">' + hotTag + p.name + '</div>'
+        + '<div class="part-spec">' + specText(p) + '</div>'
+        + '<div class="part-brand">' + (p.brand || "") + '</div></div>'
+        + '<div class="part-side"><div class="price"><span class="price-symbol">¥</span>'
+        + Number(p.price).toLocaleString("zh-CN") + '</div>'
+        + '<div class="add-btn' + (picked ? " picked" : "") + '" data-cat="' + key + '" data-i="' + i + '">'
+        + (picked ? "已选 ✓" : "加入") + '</div></div></div>';
+    });
+    html += '<div class="footer">共 ' + list.length + ' 件 · 点击加入装机单</div>';
+    $("#view").innerHTML = html;
+    $("#view").querySelector("[data-back='1']").addEventListener("click", renderHome);
+    $("#view").querySelectorAll(".add-btn").forEach(function (el) {
+      el.addEventListener("click", function () {
+        var k = el.getAttribute("data-cat");
+        var i = parseInt(el.getAttribute("data-i"), 10);
+        build[k] = list[i];
+        toast("已加入装机单");
+        renderCategory(k);
+      });
+    });
+  }
+
+  function computeSummary() {
+    var total = 0, power = 0, issues = [];
+    (D.categories || []).forEach(function (c) {
+      var p = build[c.key];
+      if (p) { total += Number(p.price || 0); power += Number(p.power || 0); }
+    });
+    var cpu = build["cpu"], mb = build["motherboard"], ram = build["memory"], psu = build["psu"];
+    if (cpu && mb && cpu.socket && mb.socket && cpu.socket !== mb.socket) {
+      issues.push({ level: "bad", text: "插槽不匹配：CPU 为 " + cpu.socket + "，主板为 " + mb.socket });
+    }
+    if (mb && ram && mb.memType && ram.memType && mb.memType !== ram.memType) {
+      issues.push({ level: "bad", text: "内存类型不匹配：主板为 " + mb.memType + "，内存为 " + ram.memType });
+    }
+    var recommend = Math.round((power + 100) * 1.5);
+    if (psu) {
+      var w = Number(psu.watt || 0);
+      if (w < recommend) {
+        issues.push({ level: "bad", text: "电源功率不足：建议 ≥ " + recommend + "W，当前 " + w + "W" });
+      } else {
+        issues.push({ level: "ok", text: "电源功率充足：" + w + "W ≥ 建议 " + recommend + "W" });
+      }
+    } else {
+      issues.push({ level: "warn", text: "未选择电源，预计需 " + recommend + "W" });
+    }
+    if (!cpu) issues.push({ level: "warn", text: "尚未选择 CPU" });
+    if (issues.length === 0) issues.push({ level: "ok", text: "配置校验通过 ✅" });
+    return { total: total, power: power, recommend: recommend, issues: issues };
+  }
+
+  function renderBuild() {
+    var html = '<div class="name-bar card"><input class="name-input" id="bname" placeholder="给这套配置起个名" /><span class="clear-link" data-clear="1">清空</span></div>';
+    html += '<div class="rows">';
+    (D.categories || []).forEach(function (c) {
+      var p = build[c.key];
+      html += '<div class="row card"><div class="row-icon">' + c.icon + '</div><div class="row-main">'
+        + '<div class="row-cat">' + c.name + '</div>';
+      if (p) {
+        html += '<div class="row-part">' + p.name + '</div></div>'
+          + '<div class="row-right"><div class="price">' + fmt(p.price) + '</div>'
+          + '<div class="row-del" data-del="' + c.key + '">移除</div></div>';
+      } else {
+        html += '<div class="row-empty">未选择 · 点此去选</div></div>'
+          + '<div class="row-right"><span class="row-del" data-goto="' + c.key + '">去选 ›</span></div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+    var s = computeSummary();
+    html += '<div class="issues">';
+    s.issues.forEach(function (it) {
+      html += '<div class="issue ' + it.level + '"><span class="issue-dot">●</span>' + it.text + '</div>';
+    });
+    html += '</div>';
+    html += '<div class="footer">当前配置预估功耗 ' + s.power + 'W</div>';
+    $("#view").innerHTML = html;
+    $("#view").querySelector("[data-clear='1']").addEventListener("click", function () {
+      build = {}; toast("已清空"); renderBuild();
+    });
+    $("#view").querySelectorAll("[data-del]").forEach(function (el) {
+      el.addEventListener("click", function () { delete build[el.getAttribute("data-del")]; renderBuild(); });
+    });
+    $("#view").querySelectorAll("[data-goto]").forEach(function (el) {
+      el.addEventListener("click", function () { renderCategory(el.getAttribute("data-goto")); });
+    });
+    showSummary(s);
+  }
+
+  function showSummary(s) {
+    var old = document.querySelector(".summary");
+    if (old) old.parentNode.removeChild(old);
+    var bar = document.createElement("div");
+    bar.className = "summary";
+    bar.innerHTML = '<div class="summary-info"><div class="summary-total">合计 <span class="price">' + fmt(s.total) + '</span></div>'
+      + '<div class="summary-sub">预估功耗 ' + s.power + 'W · 建议电源 ≥ ' + s.recommend + 'W</div></div>'
+      + '<button class="save-btn" data-save="1">保存</button>';
+    document.getElementById("phone").appendChild(bar);
+    bar.querySelector("[data-save='1']").addEventListener("click", saveBuild);
+  }
+
+  function saveBuild() {
+    var name = ($("#bname") && $("#bname").value) || ("我的配置 " + (builds.length + 1));
+    var parts = [];
+    (D.categories || []).forEach(function (c) {
+      if (build[c.key]) parts.push({ cat: c.key, id: build[c.key].id, name: build[c.key].name, price: build[c.key].price });
+    });
+    if (parts.length === 0) { toast("装机单是空的"); return; }
+    var total = parts.reduce(function (a, b) { return a + Number(b.price || 0); }, 0);
+    builds.unshift({ name: name, total: total, time: new Date().toLocaleString("zh-CN"), parts: parts });
+    localStorage.setItem(STORE_KEY, JSON.stringify(builds));
+    toast("已保存到「我的配置」");
+    switchTab("mine");
+  }
+
+  function loadBuilds() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function renderMine() {
+    var sum = document.querySelector(".summary"); if (sum) sum.parentNode.removeChild(sum);
+    var html = '<div class="section-title">我的配置</div>';
+    if (builds.length === 0) {
+      html += '<div class="empty">还没有保存的配置<br/><span class="empty-cta" data-go="1">去装机单里保存一套 ›</span></div>';
+    } else {
+      builds.forEach(function (b, idx) {
+        html += '<div class="build-card card"><div class="build-head"><span class="build-name">' + b.name + '</span>'
+          + '<span class="price">' + fmt(b.total) + '</span></div>'
+          + '<div class="build-time">' + b.time + '</div>'
+          + '<div class="build-parts">';
+        b.parts.forEach(function (p) {
+          html += '<div class="bp"><span class="bp-icon">' + catIcon(p.cat) + '</span>'
+            + '<span class="bp-cat">' + catName(p.cat) + '</span>'
+            + '<span class="bp-name">' + p.name + '</span></div>';
+        });
+        html += '</div><div class="build-actions">'
+          + '<div class="ba ghost" data-load="' + idx + '">载入</div>'
+          + '<div class="ba danger" data-del="' + idx + '">删除</div></div></div>';
+      });
+    }
+    html += '<div class="footer">配置仅存于本机浏览器</div>';
+    $("#view").innerHTML = html;
+    var go = $("#view").querySelector("[data-go='1']");
+    if (go) go.addEventListener("click", function () { switchTab("build"); });
+    $("#view").querySelectorAll("[data-load]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        var b = builds[parseInt(el.getAttribute("data-load"), 10)];
+        build = {};
+        b.parts.forEach(function (p) {
+          var arr = partsOf(p.cat);
+          var hit = arr.filter(function (x) { return x.id === p.id; })[0];
+          if (hit) build[p.cat] = hit;
+        });
+        toast("已载入"); switchTab("build");
+      });
+    });
+    $("#view").querySelectorAll("[data-del]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        builds.splice(parseInt(el.getAttribute("data-del"), 10), 1);
+        localStorage.setItem(STORE_KEY, JSON.stringify(builds));
+        renderMine();
+      });
+    });
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll("#tabbar .tab").forEach(function (t) {
+      t.classList.toggle("active", t.getAttribute("data-tab") === tab);
+    });
+    if (tab === "home") renderHome();
+    else if (tab === "build") renderBuild();
+    else if (tab === "mine") renderMine();
+  }
+
+  document.querySelectorAll("#tabbar .tab").forEach(function (t) {
+    t.addEventListener("click", function () { switchTab(t.getAttribute("data-tab")); });
+  });
+
+  renderHome();
+  </script>
+</body>
+</html>

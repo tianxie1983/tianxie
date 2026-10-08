@@ -177,7 +177,7 @@ function main() {
 
   // 5) 推送到远端：Gitee（主，国内 443 可达且无需 .ssh）与 GitHub（备用，部分环境 443 可达）。
   //    两者都做带 Token 的 HTTPS 直推，并加重试应对瞬断；至少一个成功即视为当日更新成功。
-  const githubUrl = GH_TOKEN ? httpsUrl('github.com', 'tianxie1983/tianxie', GH_TOKEN) : '';
+  const githubUrl = GH_TOKEN ? httpsUrl('github.com', 'tianxie1983/zjds', GH_TOKEN) : '';
   const giteeUrl = GITEE_TOKEN ? httpsUrl('gitee.com', 'shishui_nianhua/tianxie', GITEE_TOKEN) : '';
 
   let okGithub = false;

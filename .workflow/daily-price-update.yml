@@ -46,7 +46,7 @@ jobs:
             exit 0
           fi
           node scripts/versionize.js
-          git add web/data.js web/index.html
+          git add web/zjds/data.js web/zjds/index.html
           git commit -m "chore: 自动更新配件价格 $(date +%F)"
 
           # 推送 Gitee（当前仓库，用流水线环境变量中的令牌）
@@ -54,6 +54,6 @@ jobs:
           git push origin HEAD:main
 
           # 推送 GitHub（用 GitHub PAT）
-          git remote add github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/tianxie1983/tianxie.git" \
-            || git remote set-url github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/tianxie1983/tianxie.git"
+          git remote add github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/tianxie1983/zjds.git" \
+            || git remote set-url github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/tianxie1983/zjds.git"
           git push github HEAD:main

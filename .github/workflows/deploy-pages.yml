@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 # 每当 web/ 目录有变化（含每日 CI 更新的 data.js）自动部署到 GitHub Pages。
 # 前提：仓库 Settings → Pages → Build and deployment → Source 选 "GitHub Actions"。
-# 启用后站点地址：https://tianxie1983.github.io/tianxie/zjds/ （根路径 /tianxie/ 展示"网址已过期"提示页，不再跳转）
+# 启用后站点地址：https://tianxie1983.github.io/zjds/ （部署目录为 web/zjds，应用直接位于站点根；仓库改名 zjds 后，旧 /tianxie/ 会 404 作废）
 
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
       - name: Upload web/ as Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: web
+          path: web/zjds
 
       - name: Deploy to GitHub Pages
         id: deployment

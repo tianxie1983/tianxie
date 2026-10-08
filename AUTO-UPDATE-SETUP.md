@@ -1,7 +1,7 @@
 # 装机大师 · 自动更新与部署配置指南
 
 > **当前可访问地址（首选 GitHub Pages）**
-> - **GitHub Pages（首选）**：https://tianxie1983.github.io/tianxie/zjds/ —— 每日自动更新，数据最新（截至 2026-09-28）。
+> - **GitHub Pages（首选）**：https://tianxie1983.github.io/zjds/ —— 每日自动更新，数据最新（截至 2026-09-28）。
 > - Netlify（备用）：https://frolicking-panda-50736e.netlify.app/ —— 免费构建额度耗尽已暂停，停在 2026-09-24，待额度重置后恢复。
 
 > 本文档说明「装机大师」PC 配件价格站如何实现**全平台自动抓价 + 自动部署**，
@@ -24,7 +24,7 @@
                     ┌────────────┴────────────┐
                     ▼                         ▼
               GitHub 仓库               Gitee 仓库
-          (tianxie1983/tianxie)    (shishui_nianhua/tianxie)
+          (tianxie1983/zjds)    (shishui_nianhua/tianxie)
                     │
                     │ 推送触发自动部署
                     ▼
@@ -50,7 +50,7 @@
 > 「连接仓库自动部署」，推送才会触发重新发布。
 
 1. 打开 [app.netlify.com](https://app.netlify.com) → 进入站点 `frolicking-panda-50736e`
-2. **Build & deploy → Connect repository** → 选 GitHub 仓库 `tianxie1983/tianxie`
+2. **Build & deploy → Connect repository** → 选 GitHub 仓库 `tianxie1983/zjds`
 3. **Base directory（构建基础目录）保持仓库根目录**（务必**不要**填 `web`）；
    发布目录（Publish directory）填 **`web`**，构建命令留空，保存
    > 这样 Netlify 才会读取仓库**根目录唯一的 `netlify.toml`**（该文件已内含 `publish="web"`
@@ -101,7 +101,7 @@
 ## 五、如何验证配置成功
 
 - **GitHub Pages（首选）**：仓库 → Actions → 「Deploy to GitHub Pages」出现绿色对勾后，访问
-  https://tianxie1983.github.io/tianxie/zjds/ 看日期是否更新。
+  https://tianxie1983.github.io/zjds/ 看日期是否更新。
 - **Netlify（备用）**：配置完成后，Deploy 列表是否出现新部署；或直接等次日 02:17，看站点日期是否更新。
 - **GitHub Actions**：仓库 → Actions → 「每日自动更新配件价格」→ 右上角 **Run workflow** 手动跑一次，
   查看是否成功提交并推送 Gitee。
@@ -124,20 +124,20 @@
 
 ## 七、关键事实备忘
 
-- GitHub 真实地址：`git@github.com:tianxie1983/tianxie.git`（用户名 `tianxie1983`，非 Gitee 的 `shishui_nianhua`）
+- GitHub 真实地址：`git@github.com:tianxie1983/zjds.git`（用户名 `tianxie1983`，非 Gitee 的 `shishui_nianhua`）
 - Gitee 真实地址：`git@gitee.com:shishui_nianhua/tianxie.git`
 - 定时（UTC）：`17 18 * * *` = 北京时间次日 02:17
 - 抓取脚本：`scripts/price-fetch.js`（聚合）、`scripts/zol-fetch.js`（直连抓取，含抗限流）
 - 防覆盖保护：抓取成功率 < 0.5 时不写 `data.js`，保留上次完整数据
 - 发布目录：**`web`**
-- **首选访问地址**：https://tianxie1983.github.io/tianxie/zjds/ （GitHub Pages，每日自动更新）
+- **首选访问地址**：https://tianxie1983.github.io/zjds/ （GitHub Pages，每日自动更新）
 - 配置文件：**仓库根目录唯一一份 `netlify.toml`**（含 `publish="web"` 与关角标 CSP）；Netlify 的 Base directory 须为仓库根，**不要填 `web`**，否则会误读 `web/netlify.toml` 而绕过根配置
 
 ---
 
 ## 八、主用托管：GitHub Pages（Netlify 额度耗尽时的双轨方案，现作为首选）
 
-> **当前首选访问地址**：https://tianxie1983.github.io/tianxie/zjds/ （数据每日自动更新，已上线）
+> **当前首选访问地址**：https://tianxie1983.github.io/zjds/ （数据每日自动更新，已上线）
 
 Netlify 免费计划每月构建额度有限，耗尽后生产构建被暂停、站点停止更新（提示 "Production builds are paused"）。
 本仓库已内置 GitHub Pages 部署工作流（`.github/workflows/deploy-pages.yml`）作为**双轨备份**，现因 Netlify 暂停而
@@ -148,7 +148,7 @@ Netlify 免费计划每月构建额度有限，耗尽后生产构建被暂停、
 1. GitHub 仓库 → **Settings → Pages**
 2. **Build and deployment → Source** 选择 **「GitHub Actions」**
 3. 完成。之后推送 `web/` 变更会自动部署，站点地址：
-   `https://tianxie1983.github.io/tianxie/zjds/`
+   `https://tianxie1983.github.io/zjds/`
 4. 验证：仓库 → Actions → 「Deploy to GitHub Pages」出现绿色对勾后访问上述地址。
 
 > 说明：页面全部使用相对路径（`data.js` / `style.css` / `cover.png`），在 GitHub Pages 的 `/tianxie/zjds/` 子路径下可正常运行。

@@ -8,7 +8,7 @@ echo "[$(date '+%F %T')] 抓取最新价格..."
 node scripts/price-fetch.js
 
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git remote -v | grep -q .; then
-  git add web/data.js
+  git add web/zjds/data.js
   if git diff --cached --quiet; then
     echo "价格无变化，跳过提交"
   else

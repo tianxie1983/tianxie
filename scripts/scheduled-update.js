@@ -135,7 +135,7 @@ function main() {
   const newData = fs.readFileSync(dataPath, 'utf8');
   let oldData = '';
   try {
-    oldData = runGit(['show', 'HEAD:web/data.js']);
+    oldData = runGit(['show', 'HEAD:web/zjds/data.js']);
   } catch (e) {
     console.warn('[scheduled-update] 无法读取 HEAD 的 data.js（首次？），视为有变化');
     oldData = '';
@@ -171,7 +171,7 @@ function main() {
   }
   runGit(['config', 'user.name', 'price-bot']);
   runGit(['config', 'user.email', 'bot@workbuddy.local']);
-  runGit(['add', 'web/data.js', 'web/index.html']);
+  runGit(['add', 'web/zjds/data.js', 'web/zjds/index.html']);
   const dateStr = new Date().toISOString().slice(0, 10);
   runGit(['commit', '-m', `chore: 自动更新配件价格 ${dateStr}`]);
 

@@ -20,7 +20,7 @@
 自动部署到 **GitHub Pages**（免费、构建次数无限、无角标）。
 
 - 启用：GitHub 仓库 → Settings → Pages → Build and deployment → Source 选 **「GitHub Actions」**
-- 上线后地址：`https://tianxie1983.github.io/tianxie/`
+- 上线后地址：`https://tianxie1983.github.io/tianxie/zjds/`（根路径 `/tianxie/` 自动跳转至此）
 - 页面全部使用相对路径，在 GitHub Pages 子路径下可正常运行。
 | `nginx.example.conf` | 自有服务器 Nginx 示例配置 |
 | `.nojekyll` | GitHub Pages 跳过 Jekyll 处理 |

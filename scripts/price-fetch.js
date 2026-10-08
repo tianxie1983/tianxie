@@ -120,7 +120,7 @@ window.PC = (function () {
   return { categories, parts, presets, meta, categoryOf, partsOfCategory, partById, formatMoney, roundWatt, evaluateBuild };
 })();
 `;
-  const dest = path.join(ROOT, 'web', 'data.js');
+  const dest = path.join(ROOT, 'web', 'zjds', 'data.js');
   fs.writeFileSync(dest, out, 'utf8');
   console.log(`\n写入 ${dest}`);
   console.log(`更新统计: 自动(ZOL) ${autoCount} 款, 手动保留 ${manualCount} 款, 共 ${updated.length} 款`);

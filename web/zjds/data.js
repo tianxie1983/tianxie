@@ -56,7 +56,7 @@ window.PC = (function () {
     "id": "cpu-i5-14600kf",
     "name": "Intel 酷睿 i5-14600KF",
     "brand": "Intel",
-    "price": 2499,
+    "price": 2049,
     "power": 181,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -79,8 +79,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1929615.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
@@ -148,7 +147,7 @@ window.PC = (function () {
     "id": "cpu-r5-7500f",
     "name": "AMD 锐龙 R5 7500F",
     "brand": "AMD",
-    "price": 1239,
+    "price": 1099,
     "power": 65,
     "socket": "AM5",
     "memType": "DDR5",
@@ -170,8 +169,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1796349.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
@@ -298,7 +296,7 @@ window.PC = (function () {
     "id": "cpu-i5-14600k",
     "name": "Intel 酷睿 i5-14600K",
     "brand": "Intel",
-    "price": 2599,
+    "price": 2199,
     "power": 181,
     "socket": "LGA1700",
     "memType": "DDR5",
@@ -320,15 +318,14 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1929614.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
     "id": "cpu-r5-7600",
     "name": "AMD 锐龙 R5 7600",
     "brand": "AMD",
-    "price": 1549,
+    "price": 1399,
     "power": 65,
     "socket": "AM5",
     "memType": "DDR5",
@@ -350,15 +347,14 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1440587.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
     "id": "cpu-r5-7600x",
     "name": "AMD 锐龙 R5 7600X",
     "brand": "AMD",
-    "price": 2249,
+    "price": 1499,
     "power": 105,
     "socket": "AM5",
     "memType": "DDR5",
@@ -380,15 +376,14 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1367038.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
     "id": "cpu-r7-7700",
     "name": "AMD 锐龙 R7 7700",
     "brand": "AMD",
-    "price": 1899,
+    "price": 2099,
     "power": 65,
     "socket": "AM5",
     "memType": "DDR5",
@@ -410,8 +405,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cpu/index1440586.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cpu",
@@ -569,7 +563,7 @@ window.PC = (function () {
     "id": "mb-x670e",
     "name": "微星 MPG X670E",
     "brand": "MSI",
-    "price": 3999,
+    "price": 2499,
     "power": 45,
     "socket": "AM5",
     "memType": "DDR5",
@@ -591,8 +585,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/motherboard/index1429433.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "motherboard",
@@ -689,7 +682,7 @@ window.PC = (function () {
     "id": "mb-b650-tuf",
     "name": "华硕 TUF GAMING B650",
     "brand": "ASUS",
-    "price": 1499,
+    "price": 1299,
     "power": 35,
     "socket": "AM5",
     "memType": "DDR5",
@@ -711,8 +704,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/motherboard/index1430243.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "motherboard",
@@ -750,7 +742,7 @@ window.PC = (function () {
     "id": "mb-x670e-flag",
     "name": "华硕 ROG X670E 旗舰",
     "brand": "ASUS",
-    "price": 2899,
+    "price": 3299,
     "power": 45,
     "socket": "AM5",
     "memType": "DDR5",
@@ -772,8 +764,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/motherboard/index1430816.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "motherboard",
@@ -853,7 +844,7 @@ window.PC = (function () {
     "id": "gpu-4070s",
     "name": "七彩虹 RTX 4070 SUPER",
     "brand": "Colorful",
-    "price": 5499,
+    "price": 4799,
     "power": 220,
     "specs": [
       {
@@ -869,15 +860,14 @@ window.PC = (function () {
         "value": "2K 游戏"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1991186.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-4080s",
     "name": "微星 RTX 4080 SUPER",
     "brand": "MSI",
-    "price": 8999,
+    "price": 8499,
     "power": 320,
     "hot": true,
     "specs": [
@@ -894,8 +884,7 @@ window.PC = (function () {
         "value": "4K 游戏"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1980451.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
@@ -926,7 +915,7 @@ window.PC = (function () {
     "id": "gpu-7800xt",
     "name": "蓝宝石 RX 7800 XT",
     "brand": "SAPPHIRE",
-    "price": 5249,
+    "price": 3999,
     "power": 263,
     "specs": [
       {
@@ -942,15 +931,14 @@ window.PC = (function () {
         "value": "2K 高刷"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1857616.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-4060ti",
     "name": "影驰 RTX 4060 Ti 8G",
     "brand": "GALAX",
-    "price": 3499,
+    "price": 2999,
     "power": 165,
     "hot": true,
     "specs": [
@@ -967,15 +955,14 @@ window.PC = (function () {
         "value": "1080P/2K"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1617201.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-4070",
     "name": "七彩虹 RTX 4070",
     "brand": "Colorful",
-    "price": 11999,
+    "price": 4299,
     "power": 200,
     "specs": [
       {
@@ -991,15 +978,14 @@ window.PC = (function () {
         "value": "2K 游戏"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1511407.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-4070tis",
     "name": "微星 RTX 4070 Ti SUPER",
     "brand": "MSI",
-    "price": 6899,
+    "price": 6499,
     "power": 285,
     "specs": [
       {
@@ -1015,15 +1001,14 @@ window.PC = (function () {
         "value": "2K/4K"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1978348.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-4080",
     "name": "影驰 RTX 4080",
     "brand": "GALAX",
-    "price": 9399,
+    "price": 9499,
     "power": 320,
     "specs": [
       {
@@ -1039,15 +1024,14 @@ window.PC = (function () {
         "value": "4K 游戏"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1433634.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-rx7600",
     "name": "蓝宝石 RX 7600",
     "brand": "SAPPHIRE",
-    "price": 2299,
+    "price": 2099,
     "power": 165,
     "specs": [
       {
@@ -1063,15 +1047,14 @@ window.PC = (function () {
         "value": "1080P"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1653094.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-rx7700xt",
     "name": "撼讯 RX 7700 XT",
     "brand": "PowerColor",
-    "price": 3699,
+    "price": 3499,
     "power": 245,
     "specs": [
       {
@@ -1087,15 +1070,14 @@ window.PC = (function () {
         "value": "2K 高刷"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1968940.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
     "id": "gpu-rx7900xt",
     "name": "蓝宝石 RX 7900 XT",
     "brand": "SAPPHIRE",
-    "price": 6399,
+    "price": 5999,
     "power": 315,
     "specs": [
       {
@@ -1111,8 +1093,7 @@ window.PC = (function () {
         "value": "4K 游戏"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1437002.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
@@ -1142,7 +1123,7 @@ window.PC = (function () {
     "id": "gpu-arc770",
     "name": "英特尔 Arc A770 16G",
     "brand": "Intel",
-    "price": 2199,
+    "price": 2499,
     "power": 225,
     "specs": [
       {
@@ -1158,8 +1139,7 @@ window.PC = (function () {
         "value": "创作/剪辑"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/vga/index1950003.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "gpu",
@@ -1216,7 +1196,7 @@ window.PC = (function () {
     "id": "mem-32g-6000",
     "name": "芝奇 焰光戟 32G DDR5 6000",
     "brand": "G.SKILL",
-    "price": 999,
+    "price": 699,
     "power": 10,
     "memType": "DDR5",
     "hot": true,
@@ -1234,8 +1214,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/memory/index1985125.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "memory",
@@ -1267,7 +1246,7 @@ window.PC = (function () {
     "id": "mem-16g-6800",
     "name": "金百达 16G DDR5 6800",
     "brand": "KINGBANK",
-    "price": 415,
+    "price": 329,
     "power": 8,
     "memType": "DDR5",
     "specs": [
@@ -1284,15 +1263,14 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/memory/index1984994.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "memory",
     "id": "mem-32g-6000k",
     "name": "金士顿 FURY 32G DDR5 6000",
     "brand": "Kingston",
-    "price": 759,
+    "price": 699,
     "power": 10,
     "memType": "DDR5",
     "specs": [
@@ -1309,8 +1287,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/memory/index1629095.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "memory",
@@ -1359,8 +1336,7 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/memory/index1857413.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "memory",
@@ -1392,7 +1368,7 @@ window.PC = (function () {
     "id": "mem-32g-6800a",
     "name": "阿斯加特 32G DDR5 6800",
     "brand": "Asgard",
-    "price": 1469,
+    "price": 659,
     "power": 10,
     "memType": "DDR5",
     "specs": [
@@ -1409,15 +1385,14 @@ window.PC = (function () {
         "value": "DDR5"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/memory/index1985151.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-1t-tiplus",
     "name": "致态 TiPlus7100 1TB",
     "brand": "ZhiTai",
-    "price": 359,
+    "price": 459,
     "power": 7,
     "hot": true,
     "specs": [
@@ -1434,15 +1409,14 @@ window.PC = (function () {
         "value": "7100MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1432186.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-1t-980pro",
     "name": "三星 980 PRO 1TB",
     "brand": "SAMSUNG",
-    "price": 299,
+    "price": 699,
     "power": 8,
     "specs": [
       {
@@ -1458,15 +1432,14 @@ window.PC = (function () {
         "value": "7000MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1308467.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-2t-sn850x",
     "name": "西数 SN850X 2TB",
     "brand": "WD",
-    "price": 659,
+    "price": 1099,
     "power": 9,
     "specs": [
       {
@@ -1482,15 +1455,14 @@ window.PC = (function () {
         "value": "7300MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1427476.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-2t-ti600",
     "name": "致态 Ti600 2TB",
     "brand": "ZhiTai",
-    "price": 339,
+    "price": 799,
     "power": 8,
     "specs": [
       {
@@ -1506,15 +1478,14 @@ window.PC = (function () {
         "value": "7000MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1918447.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-1t-se10",
     "name": "铠侠 SE10 1TB",
     "brand": "Kioxia",
-    "price": 1329,
+    "price": 549,
     "power": 8,
     "specs": [
       {
@@ -1530,15 +1501,14 @@ window.PC = (function () {
         "value": "7300MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1380777.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-1t-ti5000",
     "name": "致态 TiPlus5000 1TB",
     "brand": "ZhiTai",
-    "price": 679,
+    "price": 369,
     "power": 6,
     "specs": [
       {
@@ -1554,15 +1524,14 @@ window.PC = (function () {
         "value": "3500MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1403186.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-2t-990pro",
     "name": "三星 990 PRO 2TB",
     "brand": "SAMSUNG",
-    "price": 1099,
+    "price": 1299,
     "power": 9,
     "hot": true,
     "specs": [
@@ -1579,15 +1548,14 @@ window.PC = (function () {
         "value": "7450MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1425885.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
     "id": "ssd-1t-p3plus",
     "name": "英睿达 P3 Plus 1TB",
     "brand": "Crucial",
-    "price": 599,
+    "price": 399,
     "power": 6,
     "specs": [
       {
@@ -1603,8 +1571,7 @@ window.PC = (function () {
         "value": "5000MB/s"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/solid_state_drive/index1428179.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "ssd",
@@ -1650,15 +1617,14 @@ window.PC = (function () {
         "value": "≤150W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1424114.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-ak620",
     "name": "九州风神 AK620 双塔",
     "brand": "DEEPCOOL",
-    "price": 404,
+    "price": 239,
     "power": 5,
     "hot": true,
     "specs": [
@@ -1675,15 +1641,14 @@ window.PC = (function () {
         "value": "≤260W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index2153300.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-frozen360",
     "name": "利民 Frozen 360 水冷",
     "brand": "Thermalright",
-    "price": 509,
+    "price": 499,
     "power": 7,
     "specs": [
       {
@@ -1695,15 +1660,14 @@ window.PC = (function () {
         "value": "≤300W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1346515.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-kraken360",
     "name": "恩杰 Kraken 360 水冷",
     "brand": "NZXT",
-    "price": 2199,
+    "price": 999,
     "power": 8,
     "specs": [
       {
@@ -1719,15 +1683,14 @@ window.PC = (function () {
         "value": "≤300W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1526210.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-pa120",
     "name": "利民 PA120 双塔",
     "brand": "Thermalright",
-    "price": 179,
+    "price": 139,
     "power": 4,
     "specs": [
       {
@@ -1743,15 +1706,14 @@ window.PC = (function () {
         "value": "≤220W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1424264.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-ag400",
     "name": "九州风神 AG400",
     "brand": "DEEPCOOL",
-    "price": 79,
+    "price": 89,
     "power": 3,
     "specs": [
       {
@@ -1767,15 +1729,14 @@ window.PC = (function () {
         "value": "≤220W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index2158680.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-r4000",
     "name": "超频三 东海 R4000",
     "brand": "PCCOOLER",
-    "price": 99,
+    "price": 119,
     "power": 4,
     "specs": [
       {
@@ -1791,8 +1752,7 @@ window.PC = (function () {
         "value": "≤200W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1424636.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
@@ -1818,7 +1778,7 @@ window.PC = (function () {
     "id": "cooler-mag360",
     "name": "微星 MAG 360 水冷",
     "brand": "MSI",
-    "price": 699,
+    "price": 599,
     "power": 7,
     "hot": true,
     "specs": [
@@ -1831,15 +1791,14 @@ window.PC = (function () {
         "value": "≤300W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1429210.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "cooler",
     "id": "cooler-cr1000",
     "name": "乔思伯 CR-1000 风冷",
     "brand": "JONSBO",
-    "price": 80,
+    "price": 69,
     "power": 3,
     "specs": [
       {
@@ -1855,8 +1814,7 @@ window.PC = (function () {
         "value": "≤150W"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/cooling_product/index1281413.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
@@ -1964,7 +1922,7 @@ window.PC = (function () {
     "id": "psu-550",
     "name": "振华 550W 铜牌",
     "brand": "SuperFlower",
-    "price": 379,
+    "price": 299,
     "power": 0,
     "watt": 550,
     "specs": [
@@ -1981,8 +1939,7 @@ window.PC = (function () {
         "value": "非模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index356028.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
@@ -2014,7 +1971,7 @@ window.PC = (function () {
     "id": "psu-850rm",
     "name": "海盗船 RM850e 金牌",
     "brand": "Corsair",
-    "price": 999,
+    "price": 699,
     "power": 0,
     "watt": 850,
     "hot": true,
@@ -2032,15 +1989,14 @@ window.PC = (function () {
         "value": "全模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index1914231.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
     "id": "psu-1000a",
     "name": "微星 A1000G 金牌",
     "brand": "MSI",
-    "price": 999,
+    "price": 1099,
     "power": 0,
     "watt": 1000,
     "specs": [
@@ -2057,15 +2013,14 @@ window.PC = (function () {
         "value": "全模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index1397857.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "psu",
     "id": "psu-1200",
     "name": "全汉 1200W 白金",
     "brand": "FSP",
-    "price": 599,
+    "price": 1499,
     "power": 0,
     "watt": 1200,
     "specs": [
@@ -2082,8 +2037,7 @@ window.PC = (function () {
         "value": "全模组"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/power/index2175397.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
@@ -2114,7 +2068,7 @@ window.PC = (function () {
     "id": "chassis-d31",
     "name": "乔思伯 D31 网孔版",
     "brand": "JONSBO",
-    "price": 1399,
+    "price": 399,
     "power": 5,
     "specs": [
       {
@@ -2130,8 +2084,7 @@ window.PC = (function () {
         "value": "168mm"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1948884.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
@@ -2162,7 +2115,7 @@ window.PC = (function () {
     "id": "chassis-o11",
     "name": "联力 包豪斯 O11",
     "brand": "LianLi",
-    "price": 988,
+    "price": 699,
     "power": 5,
     "specs": [
       {
@@ -2178,15 +2131,14 @@ window.PC = (function () {
         "value": "360 冷排"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1466488.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
     "id": "chassis-luban1",
     "name": "先马 鲁班1",
     "brand": "SAMA",
-    "price": 229,
+    "price": 299,
     "power": 5,
     "specs": [
       {
@@ -2202,8 +2154,7 @@ window.PC = (function () {
         "value": "360 冷排"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1296011.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
@@ -2234,7 +2185,7 @@ window.PC = (function () {
     "id": "chassis-nr400",
     "name": "酷冷 NR400",
     "brand": "CoolerMaster",
-    "price": 399,
+    "price": 329,
     "power": 5,
     "specs": [
       {
@@ -2250,15 +2201,14 @@ window.PC = (function () {
         "value": "167mm"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1277914.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
     "id": "chassis-207",
     "name": "联力 鬼斧207",
     "brand": "LianLi",
-    "price": 549,
+    "price": 499,
     "power": 5,
     "hot": true,
     "specs": [
@@ -2275,15 +2225,14 @@ window.PC = (function () {
         "value": "360 冷排"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index2128556.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
     "id": "chassis-p20c",
     "name": "安钛克 P20C",
     "brand": "Antec",
-    "price": 454,
+    "price": 399,
     "power": 5,
     "specs": [
       {
@@ -2299,15 +2248,14 @@ window.PC = (function () {
         "value": "360 冷排"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1980591.shtml"
+    "priceSource": "manual"
   },
   {
     "category": "chassis",
     "id": "chassis-xt523",
     "name": "追风者 XT523",
     "brand": "Phanteks",
-    "price": 499,
+    "price": 459,
     "power": 5,
     "specs": [
       {
@@ -2323,8 +2271,7 @@ window.PC = (function () {
         "value": "360 冷排"
       }
     ],
-    "priceSource": "zol",
-    "url": "https://detail.zol.com.cn/case/index1971140.shtml"
+    "priceSource": "manual"
   }
 ];
   const presets = [
@@ -2369,10 +2316,10 @@ window.PC = (function () {
   }
 ];
   const meta = {
-  "updatedAt": "2026-10-07T18:37:35.205Z",
+  "updatedAt": "2026-09-28T18:33:48.607Z",
   "source": "中关村在线(ZOL)公开参考价",
-  "autoCount": 80,
-  "manualCount": 8,
+  "autoCount": 27,
+  "manualCount": 61,
   "total": 88,
   "note": "价格随行情波动，仅供参考；未匹配到公开报价的配件保留原价。"
 };

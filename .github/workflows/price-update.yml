@@ -44,7 +44,7 @@ jobs:
         run: |
           git config user.name "price-bot"
           git config user.email "bot@workbuddy.local"
-          if git diff --quiet web/data.js; then
+          if git diff --quiet web/zjds/data.js; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "价格无变化（或抓取被限流跳过），本次不提交"
           else

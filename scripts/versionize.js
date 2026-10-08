@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const INDEX = path.join(__dirname, '..', 'web', 'index.html');
+const INDEX = path.join(__dirname, '..', 'web', 'zjds', 'index.html');
 
 const ver = (() => {
   const d = new Date();

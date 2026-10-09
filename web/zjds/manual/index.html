@@ -112,6 +112,17 @@
     .file-input { display: none; }
     .toast { position: fixed; left: 50%; top: 24%; transform: translateX(-50%); background: rgba(31,36,51,.92); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 13px; z-index: 50; opacity: 0; transition: opacity .25s; pointer-events: none; }
     .toast.show { opacity: 1; }
+    .part-side { position: relative; display: flex; align-items: center; }
+    .part-del { margin-left: 8px; background: var(--bad); color: #fff; border: none; border-radius: 6px; font-size: 12px; padding: 4px 7px; cursor: pointer; flex-shrink: 0; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; z-index: 60; }
+    .modal.hidden { display: none; }
+    .modal-box { background: var(--card); width: 100%; max-width: 480px; border-radius: 16px 16px 0 0; padding: 18px 16px 22px; max-height: 90vh; overflow: auto; }
+    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+    .form-row { display: flex; align-items: center; margin-bottom: 10px; }
+    .form-row label { width: 76px; font-size: 13px; color: var(--text-sub); flex-shrink: 0; }
+    .form-row input, .form-row select { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px; min-width: 0; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+    .modal-actions .tool-btn { flex: 1; justify-content: center; }
   </style>
 </head>
 <body>
@@ -128,6 +139,7 @@
         <div class="toolbar">
           <button class="tool-btn primary" id="editToggle">✎ 改价格</button>
           <button class="tool-btn hidden" id="savePrices">💾 保存修改</button>
+          <button class="tool-btn hidden" id="addPartBtn">＋ 添加配件</button>
           <button class="tool-btn hidden" id="cancelEdit">取消</button>
         </div>
         <div id="catalogList"></div>
@@ -156,11 +168,11 @@
         </div>
         <div class="dr-group">Excel（批量改价）</div>
         <div class="card data-row">
-          <div><div class="dr-label">导出 Excel 价格表</div><div class="dr-sub">.xlsx，按 ID 列出全部配件与价格，便于表格批量改价</div></div>
+          <div><div class="dr-label">导出 Excel 价格表</div><div class="dr-sub">.xlsx，按 ID 列出全部配件与规格，可批量改价/改名/改规格</div></div>
           <button class="tool-btn primary" id="exportXlsxBtn">导出</button>
         </div>
         <div class="card data-row">
-          <div><div class="dr-label">导入 Excel 价格表</div><div class="dr-sub">按 ID 更新价格，并可同时更新名称、品牌列</div></div>
+          <div><div class="dr-label">导入 Excel 价格表</div><div class="dr-sub">按 ID 更新价格/名称/品牌/规格；新 ID 自动新增；删除列填 1 则删除</div></div>
           <button class="tool-btn" id="importXlsxBtn">导入</button>
         </div>
         <div class="card data-row">
@@ -188,6 +200,25 @@
 
   <input type="file" id="fileInput" class="file-input" accept="application/json,.json" />
   <input type="file" id="fileInputXlsx" class="file-input" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+
+  <div class="modal hidden" id="addModal">
+    <div class="modal-box">
+      <div class="modal-title">添加配件</div>
+      <div class="form-row"><label>类别</label><select id="apCat"></select></div>
+      <div class="form-row"><label>ID</label><input id="apId" placeholder="唯一标识，如 gpu-xx" /></div>
+      <div class="form-row"><label>名称</label><input id="apName" placeholder="如 影驰 RTX 4060" /></div>
+      <div class="form-row"><label>品牌</label><input id="apBrand" placeholder="如 影驰" /></div>
+      <div class="form-row"><label>价格(元)</label><input id="apPrice" type="number" min="0" placeholder="0" /></div>
+      <div class="form-row"><label>功耗(W)</label><input id="apPower" type="number" min="0" placeholder="0" /></div>
+      <div class="form-row"><label>插槽</label><input id="apSocket" placeholder="如 LGA1700" /></div>
+      <div class="form-row"><label>内存类型</label><input id="apMem" placeholder="如 DDR5" /></div>
+      <div class="form-row"><label>参考链接</label><input id="apUrl" placeholder="可选" /></div>
+      <div class="modal-actions">
+        <button class="tool-btn" id="apCancel">取消</button>
+        <button class="tool-btn primary" id="apSave">添加</button>
+      </div>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
   <script>
@@ -272,7 +303,7 @@
             '<div class="part-main"><div class="part-name">' + p.name + (p.hot ? ' <span class="tag hot">热</span>' : '') + '</div>' +
             (specs ? '<div class="part-spec">' + specs + '</div>' : '') +
             '<div class="part-brand">' + (p.brand || "") + '</div></div>' +
-            '<div class="part-side">' + priceHtml + '</div></div>';
+            '<div class="part-side">' + priceHtml + (editing ? '<button class="part-del" data-del="' + p.id + '">✕</button>' : '') + '</div></div>';
         });
       });
       wrap.innerHTML = html;
@@ -282,6 +313,7 @@
       editing = !editing;
       $("editToggle").classList.toggle("hidden", editing);
       $("savePrices").classList.toggle("hidden", !editing);
+      $("addPartBtn").classList.toggle("hidden", !editing);
       $("cancelEdit").classList.toggle("hidden", !editing);
       renderCatalog();
     }
@@ -467,11 +499,11 @@
     function exportExcel() {
       var cats = effectiveCategories(), catName = {};
       cats.forEach(function (c) { catName[c.key] = c.name; });
-      var rows = [[{ v: "类别", t: "s" }, { v: "ID", t: "s" }, { v: "名称", t: "s" }, { v: "品牌", t: "s" }, { v: "价格(元)", t: "s" }, { v: "功耗(W)", t: "s" }, { v: "插槽", t: "s" }, { v: "内存类型", t: "s" }, { v: "参考链接", t: "s" }]];
+      var rows = [[{ v: "类别", t: "s" }, { v: "ID", t: "s" }, { v: "名称", t: "s" }, { v: "品牌", t: "s" }, { v: "价格(元)", t: "s" }, { v: "功耗(W)", t: "s" }, { v: "插槽", t: "s" }, { v: "内存类型", t: "s" }, { v: "参考链接", t: "s" }, { v: "删除(填1删除)", t: "s" }]];
       effectiveParts().forEach(function (p) {
         rows.push([
           { v: catName[p.category] || p.category, t: "s" }, { v: p.id, t: "s" }, { v: p.name, t: "s" }, { v: p.brand || "", t: "s" },
-          { v: p.price, t: "n" }, { v: p.power != null ? p.power : "", t: "n" }, { v: p.socket || "", t: "s" }, { v: p.memType || "", t: "s" }, { v: p.url || "", t: "s" }
+          { v: p.price, t: "n" }, { v: p.power != null ? p.power : "", t: "n" }, { v: p.socket || "", t: "s" }, { v: p.memType || "", t: "s" }, { v: p.url || "", t: "s" }, { v: "", t: "s" }
         ]);
       });
       var a = document.createElement("a");
@@ -533,6 +565,13 @@
       return rows;
     }
 
+    function ensureDataOverride() {
+      if (!dataOverride) {
+        dataOverride = { categories: JSON.parse(JSON.stringify(effectiveCategories())), parts: JSON.parse(JSON.stringify(BASE.parts)) };
+      }
+    }
+    function isTruthy(v) { return /^(1|是|yes|y|true|删|del)$/i.test(String(v || "").trim()); }
+
     async function importExcel(file) {
       try {
         var buf = await file.arrayBuffer();
@@ -543,34 +582,58 @@
         var rows = parseSheet(sheet, shared);
         if (!rows.length) throw new Error("表格为空");
         var header = rows[0].map(function (x) { return String(x).toLowerCase(); });
-        var idIdx = -1, priceIdx = -1, nameIdx = -1, brandIdx = -1;
-        for (var h = 0; h < header.length; h++) {
-          if (idIdx < 0 && header[h].indexOf("id") >= 0) idIdx = h;
-          if (priceIdx < 0 && (header[h].indexOf("价格") >= 0 || header[h].indexOf("price") >= 0)) priceIdx = h;
-          if (nameIdx < 0 && (header[h].indexOf("名称") >= 0 || header[h].indexOf("name") >= 0)) nameIdx = h;
-          if (brandIdx < 0 && (header[h].indexOf("品牌") >= 0 || header[h].indexOf("brand") >= 0)) brandIdx = h;
-        }
-        if (idIdx < 0 || priceIdx < 0) throw new Error("表格需含 ID 与 价格 列");
+        var idx = {};
+        function pick(key, tests) { if (idx[key] == null) { for (var h = 0; h < header.length; h++) { for (var ti = 0; ti < tests.length; ti++) { if (header[h].indexOf(tests[ti]) >= 0) { idx[key] = h; break; } } if (idx[key] != null) break; } } }
+        pick("id", ["id"]);
+        pick("price", ["价格", "price"]);
+        pick("cat", ["类别", "category", "cat"]);
+        pick("name", ["名称", "name"]);
+        pick("brand", ["品牌", "brand"]);
+        pick("power", ["功耗", "power"]);
+        pick("socket", ["插槽", "socket"]);
+        pick("memType", ["内存类型", "memtype", "内存"]);
+        pick("url", ["参考链接", "url", "链接"]);
+        pick("del", ["删除", "delete", "del"]);
+        if (idx.id == null || idx.price == null) throw new Error("表格需含 ID 与 价格 列");
         var byId = {}; effectiveParts().forEach(function (p) { byId[p.id] = p; });
-        var priceUpd = 0, attrUpd = 0, skipped = 0;
+        var catMap = {}; effectiveCategories().forEach(function (c) { catMap[String(c.name).toLowerCase()] = c.key; });
+        var priceUpd = 0, attrUpd = 0, added = 0, deleted = 0, skipped = 0;
+        var newParts = [], delIds = [];
         for (var r = 1; r < rows.length; r++) {
-          var row = rows[r], id = (row[idIdx] || "").trim();
+          var row = rows[r], id = (row[idx.id] || "").trim();
           if (!id) continue;
-          if (!(id in byId)) { skipped++; continue; }
-          var price = parseFloat((row[priceIdx] || "").toString().replace(/[^\d.\-]/g, ""));
-          if (!isNaN(price)) { priceOverrides[id] = price; priceUpd++; }
-          var ao = attrOverrides[id] || {};
-          if (nameIdx >= 0) { var nm = (row[nameIdx] || "").trim(); if (nm) { ao.name = nm; attrUpd++; } }
-          if (brandIdx >= 0) { var br = (row[brandIdx] || "").trim(); if (br) { ao.brand = br; attrUpd++; } }
-          if (Object.keys(ao).length) attrOverrides[id] = ao;
+          if (idx.del != null && isTruthy(row[idx.del])) { if (id in byId) delIds.push(id); else skipped++; continue; }
+          var price = parseFloat((row[idx.price] || "").toString().replace(/[^\d.\-]/g, ""));
+          if (id in byId) {
+            if (!isNaN(price)) { priceOverrides[id] = price; priceUpd++; }
+            var ao = attrOverrides[id] || {};
+            function setAttr(col, key) { if (idx[col] != null) { var v = (row[idx[col]] || "").trim(); if (v !== "") { ao[key] = (key === "power") ? (parseFloat(v.replace(/[^\d.\-]/g, "")) || 0) : v; attrUpd++; } } }
+            setAttr("name", "name"); setAttr("brand", "brand"); setAttr("power", "power"); setAttr("socket", "socket"); setAttr("memType", "memType"); setAttr("url", "url");
+            if (Object.keys(ao).length) attrOverrides[id] = ao;
+          } else {
+            var catKey = "other";
+            if (idx.cat != null) {
+              var cn = (row[idx.cat] || "").trim();
+              if (cn) { var lk = cn.toLowerCase(); if (catMap[lk]) catKey = catMap[lk]; else { catKey = "c" + (Date.now() % 1000000) + added; ensureDataOverride(); dataOverride.categories.push({ key: catKey, name: cn, icon: "•", desc: "" }); catMap[lk] = catKey; } }
+            }
+            ensureDataOverride();
+            newParts.push({ id: id, category: catKey, name: idx.name != null ? (row[idx.name] || "").trim() || "未命名" : "未命名", brand: idx.brand != null ? (row[idx.brand] || "").trim() : "", price: isNaN(price) ? 0 : price, power: idx.power != null ? (parseFloat((row[idx.power] || "").toString().replace(/[^\d.\-]/g, "")) || 0) : 0, socket: idx.socket != null ? (row[idx.socket] || "").trim() : "", memType: idx.memType != null ? (row[idx.memType] || "").trim() : "", url: idx.url != null ? (row[idx.url] || "").trim() : "" });
+            added++;
+          }
         }
+        if (newParts.length) { newParts.forEach(function (np) { dataOverride.parts.push(np); }); }
+        if (delIds.length) { var ds = {}; delIds.forEach(function (d) { ds[d] = 1; }); dataOverride.parts = dataOverride.parts.filter(function (p) { return !ds[p.id]; }); delIds.forEach(function (d) { delete priceOverrides[d]; delete attrOverrides[d]; }); }
         save(LS.prices, priceOverrides);
         save(LS.attrs, attrOverrides);
+        if (dataOverride) save(LS.data, dataOverride);
         meta = { updatedAt: new Date().toISOString() }; save(LS.meta, meta);
         renderMeta(); renderCatalog(); renderBuild();
-        var msg = "已更新 " + priceUpd + " 项价格";
-        if (attrUpd) msg += "、" + attrUpd + " 条名称/品牌";
-        if (skipped) msg += "，跳过 " + skipped + " 项（ID 不存在）";
+        var parts = [];
+        if (priceUpd) parts.push("价格 " + priceUpd);
+        if (attrUpd) parts.push("规格/名称/品牌 " + attrUpd);
+        if (added) parts.push("新增 " + added);
+        if (deleted) parts.push("删除 " + deleted);
+        var msg = "已更新：" + (parts.length ? parts.join("、") : "无") + (skipped ? "，跳过 " + skipped + " 项" : "");
         toast(msg);
       } catch (e) { toast("导入失败：" + e.message); }
     }
@@ -612,6 +675,45 @@
       toast("已恢复默认数据");
     }
 
+    function addPart(p) {
+      ensureDataOverride();
+      dataOverride.parts.push(p);
+      save(LS.data, dataOverride);
+      meta = { updatedAt: new Date().toISOString() }; save(LS.meta, meta);
+      renderMeta(); renderCatalog(); renderBuild();
+      toast("已添加配件：" + p.name);
+    }
+    function removePart(id) {
+      var p = partById(id);
+      if (!p) return;
+      if (!confirm("确定删除配件「" + p.name + "」？")) return;
+      ensureDataOverride();
+      dataOverride.parts = dataOverride.parts.filter(function (x) { return x.id !== id; });
+      delete priceOverrides[id]; delete attrOverrides[id];
+      save(LS.data, dataOverride); save(LS.prices, priceOverrides); save(LS.attrs, attrOverrides);
+      meta = { updatedAt: new Date().toISOString() }; save(LS.meta, meta);
+      renderMeta(); renderCatalog(); renderBuild();
+      toast("已删除配件：" + p.name);
+    }
+    function openAddModal() {
+      var sel = $("apCat"); sel.innerHTML = "";
+      effectiveCategories().forEach(function (c) { var o = document.createElement("option"); o.value = c.key; o.textContent = c.name; sel.appendChild(o); });
+      $("apId").value = ""; $("apName").value = ""; $("apBrand").value = ""; $("apPrice").value = ""; $("apPower").value = ""; $("apSocket").value = ""; $("apMem").value = ""; $("apUrl").value = "";
+      $("addModal").classList.remove("hidden");
+    }
+    function closeAddModal() { $("addModal").classList.add("hidden"); }
+    function saveAddPart() {
+      var id = $("apId").value.trim();
+      if (!id) { toast("请填写 ID"); return; }
+      if (effectiveParts().some(function (p) { return p.id === id; })) { toast("该 ID 已存在"); return; }
+      var p = {
+        id: id, category: $("apCat").value, name: $("apName").value.trim() || "未命名", brand: $("apBrand").value.trim(),
+        price: parseFloat($("apPrice").value) || 0, power: parseFloat($("apPower").value) || 0,
+        socket: $("apSocket").value.trim(), memType: $("apMem").value.trim(), url: $("apUrl").value.trim()
+      };
+      addPart(p); closeAddModal();
+    }
+
     // tabs
     document.querySelectorAll(".tab").forEach(function (t) {
       t.onclick = function () {
@@ -626,7 +728,7 @@
 
     $("editToggle").onclick = toggleEdit;
     $("savePrices").onclick = savePrices;
-    $("cancelEdit").onclick = function () { editing = false; $("editToggle").classList.remove("hidden"); $("savePrices").classList.add("hidden"); $("cancelEdit").classList.add("hidden"); renderCatalog(); };
+    $("cancelEdit").onclick = function () { editing = false; $("editToggle").classList.remove("hidden"); $("savePrices").classList.add("hidden"); $("addPartBtn").classList.add("hidden"); $("cancelEdit").classList.add("hidden"); renderCatalog(); };
     $("exportBtn").onclick = exportData;
     $("importBtn").onclick = function () { $("fileInput").click(); };
     $("fileInput").onchange = function () { if (this.files && this.files[0]) importData(this.files[0]); this.value = ""; };
@@ -635,6 +737,11 @@
     $("fileInputXlsx").onchange = function () { if (this.files && this.files[0]) importExcel(this.files[0]); this.value = ""; };
     $("resetBtn").onclick = resetAll;
     $("saveBuild").onclick = saveBuild;
+    $("addPartBtn").onclick = openAddModal;
+    $("apCancel").onclick = closeAddModal;
+    $("apSave").onclick = saveAddPart;
+    $("addModal").onclick = function (e) { if (e.target === this) closeAddModal(); };
+    $("catalogList").addEventListener("click", function (e) { var b = e.target.closest("[data-del]"); if (b) removePart(b.getAttribute("data-del")); });
 
     renderMeta();
     renderCatalog();
